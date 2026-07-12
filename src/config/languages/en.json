@@ -1,0 +1,46 @@
+{
+  "app": {
+    "title": "TikTok Manager"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "posts": "Posts",
+    "settings": "Settings",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid credentials"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "followers": "Followers",
+    "views": "Views",
+    "likes": "Likes",
+    "comments": "Comments",
+    "dailyViews": "Daily Views"
+  },
+  "posts": {
+    "title": "Posts",
+    "add": "Add Post",
+    "delete": "Delete",
+    "description": "Description",
+    "status": "Status",
+    "views": "Views",
+    "likes": "Likes",
+    "comments": "Comments",
+    "noPosts": "No posts yet"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "profile": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "save": "Save"
+  }
+}
