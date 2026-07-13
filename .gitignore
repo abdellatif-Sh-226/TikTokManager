@@ -1,0 +1,10 @@
+node_modules/
+dist/
+backend/vendor/
+backend/.env
+backend/storage/framework/
+backend/storage/logs/
+backend/storage/app/
+backend/bootstrap/cache/
+*.log
+.DS_Store

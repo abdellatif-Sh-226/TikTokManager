@@ -8,7 +8,6 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -29,11 +28,13 @@ class PostController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('video')) {
-            $data['video_url'] = $request->file('video')->store('posts/videos', 'public');
+            $uploadedFile = $request->file('video')->storeOnCloudinary('posts/videos');
+            $data['video_url'] = $uploadedFile->getSecurePath();
         }
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail_url'] = $request->file('thumbnail')->store('posts/thumbnails', 'public');
+            $uploadedFile = $request->file('thumbnail')->storeOnCloudinary('posts/thumbnails');
+            $data['thumbnail_url'] = $uploadedFile->getSecurePath();
         }
 
         $post = $request->user()->posts()->create($data);
@@ -47,14 +48,6 @@ class PostController extends Controller
     {
         if ($post->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        if ($post->video_url) {
-            Storage::disk('public')->delete($post->video_url);
-        }
-
-        if ($post->thumbnail_url) {
-            Storage::disk('public')->delete($post->thumbnail_url);
         }
 
         $post->delete();

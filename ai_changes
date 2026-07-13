@@ -1,0 +1,46 @@
+FILE TO WRITE EVERYTHING AI DO IN THIS PROJECT (StackFlow - TikTok Manager)
+=======================================================================
+Date: 2026-07-13
+Goal: Deploy StackFlow for free (Vercel Frontend + Render Backend + PG + Cloudinary)
+
+THIS FILE CONTAINS ALL CHANGES MADE BY AI STEP BY STEP
+======================================================
+
+[STEP 1] Created this file (ai_changes) + .gitignore at root
+
+[STEP 2] Changed enum('status', ['published','draft','scheduled']) to string('status',20)->default('draft') in create_posts_table.php
+         Reason: PostgreSQL doesn't support Laravel's enum() schema builder
+
+[STEP 3] Added cloudinary-labs/cloudinary-laravel to composer.json (package installed)
+         Created backend/config/cloudinary.php manually (vendor:publish not possible without artisan)
+
+[STEP 4] Created backend/config/cors.php – allows FRONTEND_URL origin, supports credentials
+         Handles CORS for both local dev and production
+
+[STEP 5] Added 'cloudinary' disk to config/filesystems.php
+
+[STEP 6] Modified PostController:
+         - store(): Changed from Storage::disk('public')->store() to storeOnCloudinary()
+         - destroy(): Removed Storage::delete() calls (Cloudinary handles cleanup separately)
+         - Removed Storage import
+
+[STEP 7] Modified PostResource:
+         - videoUrl/thumbnailUrl now return raw URL (Cloudinary gives full HTTPS URL) instead of Storage::url()
+         - Removed Storage import
+
+[STEP 8] Created session table migration manually (php artisan session:table said "already exists" bug)
+         File: 2026_07_13_230000_create_sessions_table.php
+
+[STEP 9] Updated .env.example with:
+         - PostgreSQL (pgsql) as default DB connection
+         - FRONTEND_URL + SANCTUM_STATEFUL_DOMAINS
+         - Cloudinary credentials (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, etc.)
+         - TikTok OAuth variables
+         - SESSION_DRIVER=database
+
+[STEP 10] Frontend built successfully (npm run build)
+          dist/ generated with:
+          - index.html (0.40 kB)
+          - assets/index-DJdpJZaK.js (651 kB, gzipped 198 kB)
+          - assets/index-BCSr-Se4.css (40 kB)
+

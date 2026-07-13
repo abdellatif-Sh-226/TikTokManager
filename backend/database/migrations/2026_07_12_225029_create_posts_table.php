@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('likes')->default(0);
             $table->bigInteger('comments')->default(0);
             $table->bigInteger('shares')->default(0);
-            $table->enum('status', ['published', 'draft', 'scheduled'])->default('draft');
+            $table->string('status', 20)->default('draft');
             $table->timestamps();
         });
     }
