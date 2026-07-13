@@ -1,7 +1,8 @@
-node_modules/
-dist/
+front/node_modules/
+front/dist/
 backend/vendor/
 backend/.env
+backend/node_modules/
 backend/storage/framework/
 backend/storage/logs/
 backend/storage/app/

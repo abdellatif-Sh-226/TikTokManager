@@ -1,810 +1,521 @@
-﻿# 📘 كتاب StackFlow - دليل المشروع الكامل
+﻿# 📘 كتاب StackFlow - دليل المشروع الكامل والشامل
 
-> **النسخة:** 1.0  
-> **التاريخ:** 13 يوليو 2026  
-> **الوصف:** شرح تفصيلي كامل لمشروع TikTok Manager (StackFlow) من الألف إلى الياء
+> **النسخة:** 2.0 (الموسعة)
+> **التاريخ:** 13 يوليو 2026
+> **الوصف:** شرح تفصيلي كامل جداً لمشروع TikTok Manager (StackFlow) – يغطي كل شيء من الصفر حتى الاحتراف
 
 ---
 
-## 🧭 فهرس المحتويات
+## 🧭 فهرس المحتويات الكامل
 
-### الجزء الأول: أساسيات تطوير الويب
-1. ما هو تطوير الويب؟
-2. الفرق بين Frontend و Backend و Database
-3. كيف تتواصل الأجزاء مع بعضها؟
-4. ما هو API و REST؟
-5. بيئة التطوير والأدوات
+### الجزء الأول: أساسيات تطوير الويب (Web Development Fundamentals)
+1.1 ما هو تطوير الويب؟
+1.2 الفرق بين Frontend و Backend و Database
+1.3 كيف يعمل الإنترنت؟
+1.4 ما هو HTTP و HTTPS؟
+1.5 طرق HTTP (GET, POST, PUT, DELETE)
+1.6 ما هو API و REST API؟
+1.7 ما هي JSON؟
+1.8 ما هو Client-Server Architecture؟
+1.9 ما هو SPA (Single Page Application)؟
+1.10 بيئة التطوير والأدوات المستخدمة
 
-### الجزء الثاني: نظرة عامة على المشروع
-6. ما هو StackFlow؟
-7. المكدس التكنولوجي الكامل
-8. هيكل المشروع الكامل
-9. كيف يعمل النظام ككل؟
+### الجزء الثاني: نظرة عامة على StackFlow
+2.1 ما هو StackFlow؟
+2.2 من يحتاج هذا التطبيق؟
+2.3 المكدس التكنولوجي الكامل (Tech Stack)
+2.4 لماذا اخترنا هذه التقنيات؟
+2.5 هيكل المشروع الكامل (الشجرة)
+2.6 كيف يعمل النظام ككل؟
+2.7 تدفق البيانات (Data Flow)
 
 ### الجزء الثالث: قاعدة البيانات (PostgreSQL)
-10. ما هي قاعدة البيانات؟
-11. لماذا PostgreSQL؟
-12. جدول users
-13. جدول posts
-14. جدول daily_stats
-15. جدول personal_access_tokens
-16. العلاقات بين الجداول
-17. فهم الـ Migrations
+3.1 ما هي قاعدة البيانات؟
+3.2 أنواع قواعد البيانات
+3.3 لماذا PostgreSQL؟
+3.4 تثبيت PostgreSQL محلياً
+3.5 الفرق بين MySQL و PostgreSQL
+3.6 كيفية التبديل من MySQL إلى PostgreSQL
+3.7 جدول users (المستخدمين) – شرح كل عمود
+3.8 جدول posts (المنشورات) – شرح كل عمود
+3.9 جدول daily_stats (الإحصائيات اليومية)
+3.10 جدول personal_access_tokens (التوكنات)
+3.11 جدول sessions (الجلسات)
+3.12 جدول cache و jobs
+3.13 العلاقات بين الجداول (Relationships)
+3.14 المفاتيح الخارجية (Foreign Keys)
+3.15 الفهارس (Indexes)
+3.16 فهم الـ Migrations في Laravel
+3.17 كيفية إضافة جدول جديد
+3.18 تدفق البيانات من القاعدة إلى المستخدم
 
 ### الجزء الرابع: الباك إند (Laravel)
-18. ما هو Laravel؟
-19. نمط MVC
-20. ملف routes/api.php
-21. AuthController
-22. DashboardController
-23. PostController
-24. TikTokAuthController
-25. الموديلات (Models)
-26. Sanctum للمصادقة
-27. TikTokService
-28. رفع الملفات إلى Cloudinary
-29. CORS
+4.1 ما هو Laravel؟
+4.2 ما هو PHP؟
+4.3 نمط MVC (Model-View-Controller)
+4.4 تثبيت Laravel
+4.5 أوامر Artisan المهمة
+4.6 هيكل مجلد Laravel
+4.7 ملف routes/api.php بالتفصيل
+4.8 Middleware (الوسيط)
+4.9 AuthController – تسجيل الدخول والخروج
+4.10 DashboardController – لوحة التحكم
+4.11 PostController – إدارة المنشورات
+4.12 TikTokAuthController – توثيق TikTok
+4.13 LoginRequest و StorePostRequest (التحقق)
+4.14 UserResource و PostResource (تحويل البيانات)
+4.15 User Model (نموذج المستخدم)
+4.16 Post Model (نموذج المنشور)
+4.17 DailyStat Model (نموذج الإحصائيات)
+4.18 العلاقات في Eloquent (Relationships)
+4.19 Sanctum للمصادقة والتوثيق
+4.20 TikTokService – خدمة TikTok API
+4.21 رفع الملفات إلى Cloudinary
+4.22 CORS – Cross-Origin Resource Sharing
+4.23 Error Handling (معالجة الأخطاء)
 
 ### الجزء الخامس: الفرونت إند (React)
-30. ما هو React؟
-31. main.tsx
-32. App.tsx
-33. types/index.ts
-34. services/ (api.ts, auth.ts, dashboard.ts, posts.ts)
-35. store/index.ts (Zustand)
-36. hooks/useTranslation.ts
-37. components/ (Sidebar, StatsCard)
-38. Tailwind CSS
+5.1 ما هو React؟
+5.2 ما هو JSX؟
+5.3 ما هو TypeScript؟
+5.4 ما هو Vite؟
+5.5 هيكل مجلد src/
+5.6 main.tsx – نقطة البداية
+5.7 index.html – الصفحة الرئيسية
+5.8 App.tsx – المكون الرئيسي والتوجيه
+5.9 types/index.ts – تعريف أنواع البيانات
+5.10 services/api.ts – اتصال Axios
+5.11 services/auth.ts – خدمات المصادقة
+5.12 services/dashboard.ts – خدمات لوحة التحكم
+5.13 services/posts.ts – خدمات المنشورات
+5.14 store/index.ts – إدارة الحالة (Zustand)
+5.15 hooks/useTranslation.ts – نظام الترجمة
+5.16 config/colors.ts – ألوان التطبيق
+5.17 config/languages/ – ملفات الترجمة
+5.18 components/Sidebar.tsx – الشريط الجانبي
+5.19 components/StatsCard.tsx – بطاقة إحصائية
+5.20 Tailwind CSS – التنسيق
 
 ### الجزء السادس: شرح الصفحات بالتفصيل
-39. صفحة Login
-40. صفحة Dashboard
-41. صفحة Posts
-42. صفحة CreatePost
-43. صفحة Settings
-44. تدفق البيانات الكامل
+6.1 Login.tsx – صفحة تسجيل الدخول
+6.2 Dashboard.tsx – لوحة التحكم
+6.3 Posts.tsx – قائمة المنشورات
+6.4 CreatePost.tsx – إنشاء منشور جديد
+6.5 Settings.tsx – الإعدادات
+6.6 تدفق البيانات الكامل (سيناريو كامل)
 
-### الجزء السابع: النشر والتشغيل
-45. تحضير الكود للنشر
-46. نشر الفرونت إند على Vercel
-47. نشر الباك إند على Render
-48. PostgreSQL على Render
-49. Cloudinary
-50. TikTok Sandbox
+### الجزء السابع: النشر والتشغيل (Deployment)
+7.1 تحضير الكود للنشر
+7.2 Git و GitHub
+7.3 إنشاء حساب Render
+7.4 نشر قاعدة البيانات PostgreSQL على Render
+7.5 نشر الباك إند (Laravel) على Render
+7.6 إنشاء حساب Vercel
+7.7 نشر الفرونت إند (React) على Vercel
+7.8 إنشاء حساب Cloudinary
+7.9 إعداد TikTok Sandbox
+7.10 الفحص النهائي والتأكد من العمل
 
 ---
 
 # الجزء الأول: أساسيات تطوير الويب
 
-## 1. ما هو تطوير الويب؟
+---
 
-تطوير الويب (Web Development) هو عملية بناء وتطوير مواقع الإنترنت. أي موقع ويب يتكون من ثلاثة أجزاء رئيسية:
+## 1.1 ما هو تطوير الويب؟
+
+تطوير الويب (Web Development) هو عملية بناء وتطوير مواقع الإنترنت وتطبيقات الويب. كل موقع أو تطبيق على الإنترنت يتكون من ثلاثة أجزاء رئيسية لا غنى عنها:
 
 `
-┌─────────────────────────────────────────────────────────┐
-│                   موقع الويب (Website)                    │
-├─────────────────┬─────────────────┬─────────────────────┤
-│  Frontend       │  Backend        │  Database           │
-│  (الواجهة)      │  (الخادم)       │  (قاعدة البيانات)   │
-│                 │                 │                     │
-│  ما يراه        │  المنطق         │  تخزين البيانات     │
-│  المستخدم       │  والمعالجة     │                     │
-└─────────────────┴─────────────────┴─────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    تطبيق الويب (Web Application)                  │
+├───────────────────┬───────────────────┬─────────────────────────┤
+│   Frontend        │    Backend        │      Database           │
+│   (الواجهة)       │    (الخادم)       │   (قاعدة البيانات)     │
+│                   │                   │                         │
+│   React           │    Laravel        │      PostgreSQL         │
+│   ما يراه         │    منطق العمل     │      تخزين دائم         │
+│   المستخدم        │    والمعالجة     │      للبيانات           │
+└───────────────────┴───────────────────┴─────────────────────────┘
 `
 
-### تشبيه بسيط
+### تشبيه واقعي لفهم الأجزاء
 
-تخيل أنك تذهب إلى مطعم:
+تخيل أنك تدخل إلى مطعم للطلب:
 
-| الجزء | المطعم | StackFlow |
-|-------|--------|-----------|
-| الواجهة (Frontend) | قائمة الطعام + شكل المطعم | React (يعرض الصفحات) |
-| الخادم (Backend) | الطباخ الذي يحضر الطعام | Laravel (يعالج الطلبات) |
-| قاعدة البيانات | الثلاجة حيث تُحفظ المكونات | PostgreSQL (تخزن البيانات) |
+| العنصر | في المطعم | في StackFlow |
+|--------|-----------|--------------|
+| **الواجهة (Frontend)** | قائمة الطعام + شكل المطعم + النادل | الصفحات التي تراها في المتصفح (React) |
+| **الخادم (Backend)** | الطباخ الذي يحضر الطعام | Laravel الذي يعالج طلباتك |
+| **قاعدة البيانات** | الثلاجة والمخزن حيث تُحفظ المكونات | PostgreSQL حيث تُحفظ البيانات |
+| **API** | قائمة الطلبات بين النادل والطباخ | روابط REST التي تتواصل بها الواجهة مع الخادم |
 
-الزبون (المستخدم) يرى فقط قائمة الطعام (الواجهة)، يطلب طبقًا، الطباخ (الخادم) يجهز الطلب باستخدام المكونات من الثلاجة (قاعدة البيانات)، ثم يقدم الطبق للزبون.
+الزبون (المستخدم) يرى فقط القائمة والواجهة (Frontend)، يطلب الطعام عبر النادل (API)، الطباخ (Backend) يجهز الطلب باستخدام المكونات من الثلاجة (Database)، ثم يقدم الطبق للزبون.
 
 ### أنواع تطبيقات الويب
 
-1. **مواقع ثابتة (Static)**: مثل صفحات التعريف، لا تتغير حسب المستخدم
-2. **تطبيقات ديناميكية (Dynamic)**: مثل فيسبوك، تتغير حسب المستخدم والبيانات
-3. **تطبيقات صفحة واحدة (SPA)**: مثل StackFlow، كل الصفحات في ملف واحد
+هناك 3 أنواع رئيسية:
 
-مشروع StackFlow هو **تطبيق صفحة واحدة (SPA)** مع باك إند منفصل. هذا يعني أن الواجهة والخادم يعملان بشكل مستقل ويتواصلان عبر API.
+**1. المواقع الثابتة (Static Websites)**
+- محتوى ثابت لا يتغير
+- مثال: صفحة تعريف شخصية، مدونة بسيطة
+- التقنيات: HTML, CSS, JavaScript فقط
 
-## 2. الفرق بين Frontend و Backend و Database
+**2. المواقع الديناميكية (Dynamic Websites)**
+- المحتوى يتغير حسب المستخدم والبيانات
+- مثال: فيسبوك، تويتر، يوتيوب
+- تحتاج: Frontend + Backend + Database
 
-### الفرونت إند (Frontend)
+**3. تطبيقات الصفحة الواحدة (SPA)**
+- كل المحتوى في صفحة HTML واحدة
+- التبديل بين الصفحات يتم بدون إعادة تحميل
+- مثال: Gmail, Google Maps, StackFlow
+- التقنيات: React, Vue, Angular + API
 
-الفرونت إند هو **كل ما يراه المستخدم ويتفاعل معه** في المتصفح.
+مشروع **StackFlow** هو تطبيق SPA. الفرونت إند (React) منفصل تماماً عن الباك إند (Laravel). يتواصلان عبر REST API.
 
-التقنيات المستخدمة في StackFlow:
+---
 
-| التقنية | الدور | شرح مبسط |
-|---------|-------|----------|
-| React | بناء واجهة المستخدم | يقسم الصفحة إلى مكونات صغيرة |
-| TypeScript | إضافة أنواع للكود | يمنع الأخطاء قبل التشغيل |
-| Vite | أداة بناء وتشغيل | يحول الكود إلى ملفات للمتصفح |
-| Tailwind CSS | التنسيق | أكواد CSS داخل HTML مباشرة |
-| Zustand | حفظ البيانات المشتركة | مخزن مركزي للبيانات |
-| Axios | التواصل مع الخادم | يرسل ويستقبل طلبات HTTP |
-| Recharts | رسم المخططات البيانية | رسوم بيانية جميلة وسهلة |
-| React Router | التنقل بين الصفحات | يغير الصفحة بدون إعادة تحميل |
+## 1.2 الفرق بين Frontend و Backend و Database
 
-### الباك إند (Backend)
+### الفرونت إند (Frontend) – الواجهة الأمامية
 
-الباك إند هو **الخادم الذي يعمل في الخلفية**. المستخدم لا يراه مباشرة.
+الفرونت إند هو **كل ما يراه المستخدم ويتفاعل معه** في المتصفح. مسؤول عن:
+- تصميم واجهة المستخدم (UI)
+- تجربة المستخدم (UX)
+- التفاعل مع المستخدم (أزرار، نماذج، حركات)
+- إرسال الطلبات إلى الخادم
+- استقبال البيانات وعرضها
 
-التقنيات المستخدمة:
+**التقنيات المستخدمة في StackFlow:**
+
+| التقنية | الدور في المشروع | شرح مبسط |
+|---------|------------------|----------|
+| React 18 | بناء واجهة المستخدم | يقسم الصفحة إلى مكونات صغيرة قابلة لإعادة الاستخدام |
+| TypeScript | إضافة أنواع للكود | يمنع الأخطاء قبل تشغيل البرنامج |
+| Vite 5 | أداة بناء وتشغيل | يحول كود React إلى ملفات يفهمها المتصفح |
+| Tailwind CSS 4 | التنسيق والتصميم | أكواد CSS داخل HTML مباشرة |
+| React Router 6 | التنقل بين الصفحات | يغير الصفحة بدون إعادة تحميل |
+| Zustand 5 | حفظ البيانات المشتركة | مخزن مركزي للبيانات متاح لكل المكونات |
+| Axios 1 | التواصل مع الخادم | يرسل ويستقبل طلبات HTTP |
+| Zod 4 | التحقق من صحة البيانات | يتأكد أن البيانات صحيحة قبل إرسالها |
+| Recharts 3 | رسم المخططات البيانية | رسوم بيانية جميلة وسهلة |
+| React Router DOM | نظام التوجيه | ربط المسارات (URL) بالمكونات |
+
+### الباك إند (Backend) – الخادم الخلفي
+
+الباك إند هو **الخادم الذي يعمل في الخلفية**. المستخدم لا يراه مباشرة. مسؤول عن:
+- معالجة طلبات المستخدم
+- تطبيق منطق العمل (Business Logic)
+- التواصل مع قاعدة البيانات
+- المصادقة والأمان
+- التواصل مع خدمات خارجية (TikTok API)
+
+**التقنيات المستخدمة في StackFlow:**
 
 | التقنية | الدور |
 |---------|-------|
 | Laravel 13 | إطار عمل PHP (Framework) |
 | PHP 8.3+ | لغة البرمجة |
-| Sanctum | نظام المصادقة (API tokens) |
+| Sanctum 4 | نظام المصادقة (API tokens) |
 | Eloquent ORM | التعامل مع قاعدة البيانات |
-| Guzzle | طلبات HTTP للخدمات الخارجية |
-| Cloudinary | تخزين الملفات (صور/فيديو) |
+| Guzzle HTTP | طلبات HTTP للخدمات الخارجية |
+| Cloudinary SDK | رفع وتخزين الملفات السحابي |
 
 ### قاعدة البيانات (Database)
 
-قاعدة البيانات هي **المكان الذي تُحفظ فيه كل البيانات بشكل منظم**.
+قاعدة البيانات هي **المكان الذي تُحفظ فيه كل البيانات بشكل منظم ودائم**. بدون قاعدة بيانات، كل المعلومات ستضيع عند إغلاق الخادم.
 
-StackFlow يستخدم **PostgreSQL**، وهي قاعدة بيانات علائقية (Relational Database). البيانات تخزن في **جداول (Tables)** مثل جدول إكسل.
+**مشروع StackFlow يستخدم PostgreSQL** وهي قاعدة بيانات علائقية (Relational Database). البيانات تُخزن في جداول (Tables) مرتبطة ببعضها.
 
-## 3. كيف تتواصل الأجزاء مع بعضها؟
+---
+
+## 1.3 كيف يعمل الإنترنت؟
+
+لفهم كيفية عمل تطبيقات الويب، يجب أولاً فهم أساسيات الإنترنت:
+
+### ما هو الخادم (Server)؟
+
+الخادم هو **كمبيوتر قوي متصل بالإنترنت 24/7**. ينتظر الطلبات من المتصفحات ويرد عليها.
+
+### ما هو العميل (Client)؟
+
+العميل هو **المتصفح الذي تستخدمه** (Chrome, Firefox, Edge) أو تطبيق الجوال.
+
+### كيف يتصل العميل بالخادم؟
 
 `
-┌──────────┐      طلب HTTP      ┌──────────┐      استعلام SQL     ┌──────────┐
-│          │  ────────────────>  │          │  ────────────────>  │          │
-│ Frontend │                    │ Backend  │                    │ Database │
-│ (React)  │  <──────────────── │ (Laravel)│  <──────────────── │ (PostgreSQL)
-│          │      رد JSON       │          │       بيانات       │          │
-└──────────┘                    └──────────┘                    └──────────┘
+العميل (المتصفح)                          الخادم (Server)
+      │                                       │
+      │─── 1. أكتب عنوان الموقع ─────────────→│
+      │    (https://stackflow.vercel.app)      │
+      │                                       │
+      │←── 2. الخادم يرد بملفات HTML/CSS/JS───│
+      │                                       │
+      │─── 3. المتصفح يشغل JavaScript ───────→│
+      │    (React يشتغل)                      │
+      │                                       │
+      │─── 4. طلب API (مثلاً /api/posts) ────→│
+      │                                       │
+      │←── 5. رد JSON (البيانات) ─────────────│
+      │                                       │
+   المستخدم يرى النتيجة                       │
 `
 
-### الخطوات بالتفصيل:
+### ما هو DNS؟
 
-1. المستخدم يضغط على "Login" في الفرونت إند
-2. الفرونت إند يرسل طلب HTTP POST إلى الباك إند
-3. الباك إند يستقبل الطلب، يتحقق من البيانات
-4. الباك إند يتصل بقاعدة البيانات: SELECT * FROM users WHERE email = ?
-5. قاعدة البيانات ترجع بيانات المستخدم
-6. الباك إند يتحقق من كلمة المرور
-7. الباك إند يرجع رد JSON للفرونت إند
-8. الفرونت إند يستقبل الرد ويظهر اسم المستخدم
+DNS = Domain Name System. هو **دليل الهاتف للإنترنت**. عندما تكتب google.com، DNS يترجمه إلى عنوان IP مثل 142.250.185.78 الذي تفهمه أجهزة الكمبيوتر.
 
-## 4. ما هو API و REST؟
+### ما هو Hosting؟
 
-### API (واجهة برمجة التطبيقات)
+الإستضافة (Hosting) هي **خدمة تأجير خادم** لتشغيل تطبيقك عليه. في مشروعنا:
+- Vercel يستضيف الفرونت إند (ملفات ثابتة)
+- Render يستضيف الباك إند (خادم Laravel) + قاعدة البيانات
 
-API = Application Programming Interface. هو **وسيلة التواصل بين التطبيقات** المختلفة.
+---
 
-في مشروعنا:
+## 1.4 ما هو HTTP و HTTPS؟
+
+### HTTP (HyperText Transfer Protocol)
+
+HTTP هو **بروتوكول (Protocol) لنقل البيانات** بين المتصفح والخادم. يحدد:
+- كيف يرسل العميل الطلب
+- كيف يرد الخادم
+- شكل البيانات
+
+### HTTPS (HTTP Secure)
+
+نفس HTTP لكن **مشفر** باستخدام SSL/TLS. هذا يعني:
+- لا يمكن لأحد قراءة البيانات بينك وبين الخادم
+- مهم جداً للتطبيقات التي تتعامل مع كلمات مرور
+- المواقع الحديثة كلها تستخدم HTTPS
+
+في مشروعنا: Vercel و Render يقدمان HTTPS تلقائياً.
+
+### مكونات طلب HTTP
+
+`
+POST /api/login HTTP/1.1          ← الطريقة + المسار + الإصدار
+Host: api.stackflow.com            ← اسم الخادم
+Content-Type: application/json     ← نوع البيانات المرسلة
+Authorization: Bearer 1|xxx       ← التوكن (إن وجد)
+
+{ "email": "test@test.com", "password": "123456" }  ← الجسم (Body)
+`
+
+### مكونات رد HTTP
+
+`
+HTTP/1.1 200 OK                    ← الإصدار + رمز الحالة + الرسالة
+Content-Type: application/json     ← نوع البيانات
+
+{ "data": { "id": 1, "name": "Ahmed" } }  ← البيانات
+`
+
+---
+
+## 1.5 طرق HTTP (Methods)
+
+| الطريقة (Method) | المعنى | هل لها Body؟ | مثال في StackFlow |
+|-----------------|--------|-------------|-------------------|
+| **GET** | قراءة / جلب بيانات | لا | GET /api/posts (جلب المنشورات) |
+| **POST** | إنشاء / إرسال بيانات جديد | نعم | POST /api/login (تسجيل دخول) |
+| **PUT** | تحديث كامل لبيانات موجودة | نعم | (غير مستخدم حالياً) |
+| **PATCH** | تحديث جزئي | نعم | (غير مستخدم حالياً) |
+| **DELETE** | حذف بيانات | لا | DELETE /api/posts/1 (حذف منشور) |
+
+### رموز حالة HTTP (Status Codes)
+
+| الرمز | المعنى | متى يحدث |
+|-------|--------|----------|
+| **200** | OK (نجاح) | الطلب تم بنجاح |
+| **201** | Created (تم الإنشاء) | بعد إنشاء منشور جديد |
+| **204** | No Content (لا محتوى) | بعد حذف ناجح |
+| **400** | Bad Request (طلب خاطئ) | بيانات غير صحيحة |
+| **401** | Unauthorized (غير مصرح) | التوكن غير صحيح |
+| **403** | Forbidden (ممنوع) | ليس لديك صلاحية |
+| **404** | Not Found (غير موجود) | المسار غير صحيح |
+| **422** | Unprocessable Entity | فشل التحقق من صحة البيانات |
+| **500** | Internal Server Error (خطأ في الخادم) | مشكلة في السيرفر |
+
+---
+
+## 1.6 ما هو API و REST API؟
+
+### API (Application Programming Interface)
+
+API هو **واجهة برمجية تسمح للتطبيقات بالتواصل مع بعضها**.
+
+**مثال واقعي:**  أنت في مطعم، تطلب من النادل (API) طعامك. أنت لا تذهب للمطبخ بنفسك.
+
+**في StackFlow:**
 - الفرونت إند (React) يتواصل مع الباك إند (Laravel) عبر API
 - الباك إند يتواصل مع TikTok عبر API
 
 ### REST API
 
-REST = Representational State Transfer. هو **نمط معين** لبناء APIs.
-
-### طرق HTTP (Methods)
-
-| الطريقة | المعنى | مثال في StackFlow |
-|---------|--------|-------------------|
-| GET | قراءة بيانات | جلب قائمة المنشورات |
-| POST | إنشاء جديد | تسجيل دخول، إنشاء منشور |
-| DELETE | حذف | حذف منشور |
+REST = Representational State Transfer. هو **نمط معماري لبناء APIs**. يعتمد على:
+1. **المسار (Endpoint)**: URL يمثل مورداً (Resource)
+2. **الطريقة (Method)**: GET, POST, DELETE...
+3. **البيانات (Payload)**: JSON
 
 ### مسارات API في StackFlow
 
-```
-POST   /api/login                    <- تسجيل الدخول
-POST   /api/logout                   <- تسجيل الخروج
-GET    /api/user                     <- معلومات المستخدم
+`
+POST   /api/login                       ← تسجيل الدخول
+POST   /api/logout                      ← تسجيل الخروج
+GET    /api/user                        ← معلومات المستخدم الحالي
 
-GET    /api/auth/tiktok/redirect     <- رابط توثيق TikTok
-GET    /api/auth/tiktok/callback     <- استقبال رد TikTok
+GET    /api/auth/tiktok/redirect        ← الحصول على رابط توثيق TikTok
+GET    /api/auth/tiktok/callback        ← استقبال رد TikTok بعد التوثيق
 
-GET    /api/dashboard/stats          <- إحصائيات
-GET    /api/dashboard/daily-stats    <- إحصائيات يومية
+GET    /api/dashboard/stats             ← إحصائيات لوحة التحكم
+GET    /api/dashboard/daily-stats       ← إحصائيات يومية للرسم البياني
 
-GET    /api/posts                    <- قائمة المنشورات
-POST   /api/posts                    <- إنشاء منشور
-DELETE /api/posts/{id}               <- حذف منشور
-```
+GET    /api/posts                       ← قائمة المنشورات
+POST   /api/posts                       ← إنشاء منشور جديد
+DELETE /api/posts/{id}                  ← حذف منشور (id = معرف المنشور)
+`
 
+---
 
-## 5. بيئة التطوير والأدوات
+## 1.7 ما هي JSON؟
 
-### الأوامر الأساسية
+JSON = JavaScript Object Notation. هو **تنسيق خفيف لتبادل البيانات** سهل القراءة للبشر والآلات.
 
-```bash
-# تشغيل الفرونت إند
+### مثال JSON
+
+`json
+{
+  "data": {
+    "id": "1",
+    "name": "Ahmed",
+    "email": "ahmed@example.com",
+    "isActive": true,
+    "posts": [
+      { "id": "1", "description": "First post", "views": 1500 },
+      { "id": "2", "description": "Second post", "views": 2300 }
+    ]
+  }
+}
+`
+
+### أنواع البيانات في JSON
+
+| النوع | مثال | شرح |
+|-------|------|------|
+| String (نص) | "Hello" | نص بين علامتي تنصيص |
+| Number (رقم) | 1500 | عدد صحيح أو عشري |
+| Boolean (منطقي) | 	rue / alse | صح أو خطأ |
+| Array (مصفوفة) | [1, 2, 3] | قائمة من العناصر |
+| Object (كائن) | {"key": "value"} | مجموعة من الخصائص |
+| null (فارغ) | 
+ull | قيمة فارغة |
+
+JSON هو صيغة التبادل الأساسية بين الفرونت إند والباك إند في StackFlow.
+
+---
+
+## 1.8 ما هو Client-Server Architecture؟
+
+هذا هو النمط المعماري الذي يعمل به الإنترنت:
+
+`
+┌───────────────┐                  ┌───────────────┐
+│   Client     │    طلب (Request)   │    Server    │
+│  (المتصفح)   │ ─────────────────→ │   (الخادم)   │
+│               │                  │               │
+│  React يعمل   │    رد (Response)  │  Laravel يعمل│
+│  في المتصفح   │ ←──────────────── │  على الخادم  │
+└───────────────┘                  └───────┬───────┘
+                                          │
+                                          ▼
+                                   ┌───────────────┐
+                                   │   Database    │
+                                   │  (PostgreSQL) │
+                                   └───────────────┘
+`
+
+### مميزات هذه المعمارية
+
+1. **الفصل (Separation)**: الفرونت إند منفصل عن الباك إند
+2. **التوسع (Scalability)**: يمكن تطوير كل جزء بشكل مستقل
+3. **الأمان**: البيانات الحساسة تبقى في الخادم
+4. **المرونة**: يمكن أن يكون عدة عملاء (Web, Mobile, Desktop) يشاركون نفس الخادم
+
+---
+
+## 1.9 ما هو SPA (Single Page Application)?
+
+### التعريف
+
+تطبيق الصفحة الواحدة (SPA) هو تطبيق ويب **يعمل في صفحة HTML واحدة**. يتغير المحتوى ديناميكياً بدون إعادة تحميل الصفحة.
+
+### كيف يعمل SPA؟
+
+`
+التطبيق العادي (غير SPA):
+   المستخدم يضغط على رابط → المتصفح يحمّل صفحة جديدة كاملة → وميض أبيض → المحتوى يظهر
+
+تطبيق SPA (مثل StackFlow):
+   المستخدم يضغط على رابط → JavaScript يغير المحتوى فوراً → لا وميض → تجربة سلسة
+`
+
+### مقارنة SPA vs Traditional
+
+| الميزة | SPA (StackFlow) | Traditional (قديم) |
+|--------|----------------|-------------------|
+| سرعة التصفح | فوري (بدون إعادة تحميل) | بطيء (كل صفحة تحميل جديد) |
+| تجربة المستخدم | ممتازة، مثل تطبيق جوال | مقبولة |
+| SEO (محركات البحث) | يحتاج تحسينات إضافية | طبيعي |
+| التعقيد | أعلى (JavaScript أكثر) | أقل |
+| حجم الملفات الأولي | أكبر (تحميل كل شيء مرة واحدة) | أقل (تحميل كل صفحة لوحدها) |
+
+---
+
+## 1.10 بيئة التطوير والأدوات المستخدمة
+
+### ما تحتاج لتشغيل StackFlow محلياً
+
+| الأداة | الإصدار المطلوب | رابط التحميل | شرح |
+|--------|-----------------|-------------|------|
+| **Node.js** | 18+ | nodejs.org | يشغل JavaScript خارج المتصفح |
+| **npm** | 9+ | يأتي مع Node.js | مدير الحزم (لتحميل المكتبات) |
+| **PHP** | 8.3+ | php.net | لغة البرمجة للباك إند |
+| **Composer** | 2+ | getcomposer.org | مدير حزم PHP |
+| **Git** | أحدث | git-scm.com | نظام التحكم في النسخ |
+| **PostgreSQL** | 16 | postgresql.org | قاعدة البيانات |
+| **VS Code** | أحدث | code.visualstudio.com | محرر الأكواد |
+
+### الأوامر الأساسية لتشغيل المشروع
+
+`ash
+# 1. تحميل وتشغيل الفرونت إند
 cd TikTokManager
-npm install          # تحميل المكتبات
-npm run dev          # http://localhost:5173
+npm install                       # تحميل كل المكتبات المذكورة في package.json
+npm run dev                       # تشغيل خادم التطوير على http://localhost:5173
 
-# تشغيل الباك إند
+# 2. تحميل وتشغيل الباك إند
 cd backend
-composer install     # تحميل مكتبات PHP
-cp .env.example .env # نسخ ملف الإعدادات
-php artisan key:generate  # توليد مفتاح التشفير
-php artisan serve    # http://localhost:8000
-```
-
----
-
-# الجزء الثاني: نظرة عامة على المشروع
-
-## 6. ما هو StackFlow؟
-
-**StackFlow** هو تطبيق ويب **لإدارة حسابات TikTok**. يسمح لك بـ:
-
-- ربط حساب TikTok الخاص بك عبر OAuth
-- مشاهدة إحصائيات حسابك (المشاهدات، الإعجابات، المتابعين)
-- إدارة المنشورات (عرض، إنشاء، حذف)
-- رؤية رسم بياني للإحصائيات اليومية
-- تغيير الإعدادات الشخصية واللغة
-
-### لمن هذا التطبيق؟
-
-- منشئي المحتوى على TikTok
-- المسوقين الذين يديرون حسابات متعددة
-- الوكالات التي تدير حسابات عملاء
-
-
-## 7. المكدس التكنولوجي الكامل
-
-### الفرونت إند
-React 18 + TypeScript + Vite 5 + Tailwind CSS 4 + React Router 6 + Zustand 5 + Axios + Zod + Recharts
-
-### الباك إند
-Laravel 13 + PHP 8.3 + Sanctum + Eloquent ORM + Guzzle + Cloudinary SDK
-
-### قاعدة البيانات
-PostgreSQL 16
-
-### أدوات التشغيل
-Vercel (Frontend) + Render (Backend + DB) + Cloudinary (Files) + GitHub (Code)
-
-## 8. هيكل المشروع الكامل
-
-```
-TikTokManager/
-├── index.html                    # صفحة HTML الرئيسية
-├── package.json                  # إعدادات npm
-├── vite.config.ts                # إعدادات Vite
-├── .gitignore                    # الملفات المتجاهلة
-├── ai_changes                    # سجل تغييرات AI
-│
-├── src/                          # الفرونت إند
-│   ├── main.tsx                  # نقطة الدخول
-│   ├── App.tsx                   # المكون الرئيسي (التوجيه)
-│   ├── index.css                 # تنسيقات + Tailwind
-│   │
-│   ├── types/index.ts            # User, Post, Stats, DailyStats
-│   ├── services/                 # api.ts, auth.ts, dashboard.ts, posts.ts
-│   ├── store/index.ts            # Zustand stores
-│   ├── hooks/useTranslation.ts   # نظام الترجمة
-│   ├── config/                   # colors.ts + languages/
-│   ├── components/               # Sidebar.tsx, StatsCard.tsx
-│   └── pages/                    # Login, Dashboard, Posts, CreatePost, Settings
-│
-├── backend/                      # الباك إند
-│   ├── routes/api.php            # مسارات API
-│   ├── app/Http/Controllers/Api/ # AuthController, DashboardController, PostController, TikTokAuthController
-│   ├── app/Models/               # User, Post, DailyStat
-│   ├── app/Services/             # TikTokService
-│   ├── config/                   # cors.php, sanctum.php, cloudinary.php
-│   └── database/migrations/      # ملفات إنشاء الجداول
-│
-├── dist/                         # نسخة الإنتاج من الفرونت إند
-└── scripts/md-to-pdf.js          # تحويل Markdown إلى PDF
-```
-
-
-## 9. كيف يعمل النظام ككل؟
-
-مثال: **مستخدم يريد رؤية المنشورات**
-
-```
-1. المتصفح -> https://stackflow.vercel.app/posts
-2. React Router -> يجد المسار /posts
-3. يعرض مكون <Posts />
-4. Posts.tsx: useEffect -> fetchPosts()
-5. Zustand Store: usePostsStore.fetchPosts()
-6. services/posts.ts: api.get('/posts')
-7. Axios يرسل طلب GET مع التوكن
-8. Laravel يستقبل الطلب
-9. Sanctum يتحقق من التوكن -> صحيح
-10. PostController::index()
-11. User->posts()->orderBy('created_at', 'desc')->get()
-12. SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC
-13. PostgreSQL يرجع البيانات
-14. PostResource يحول البيانات إلى JSON
-15. Laravel يرد: { "data": [ { "id": 1, ... } ] }
-16. Axios يستقبل الرد
-17. Zustand Store يحفظ البيانات
-18. React يعيد رسم المكون
-19. المستخدم يرى قائمة المنشورات
-```
-
-هذا المسار الكامل يحدث في أقل من ثانية!
-
----
-
-# الجزء الثالث: قاعدة البيانات (PostgreSQL)
-
-## 10. ما هي قاعدة البيانات؟
-
-قاعدة البيانات هي **نظام لتخزين واسترجاع البيانات** بشكل منظم.
-
-بدون قاعدة بيانات، كل البيانات ستضيع عند إغلاق الخادم. قاعدة البيانات:
-- تحفظ البيانات بشكل دائم
-- تنظم البيانات في جداول
-- تسمح بالبحث السريع
-- تضمن سلامة البيانات
-
-PostgreSQL يدعم أنواع بيانات متعددة: integer, bigint, varchar(n), text, boolean, date, timestamp, json.
-
-## 11. لماذا PostgreSQL؟
-
-اخترنا PostgreSQL بدلاً من MySQL للأسباب التالية:
-- مجاني تمامًا
-- يتبع معايير SQL بدقة
-- دعم ممتاز لـ JSON
-- أداء ممتاز للعمليات المعقدة
-- متوفر مجانًا على Render
-
-التغيير الوحيد الذي طبقناه للتوافق مع PostgreSQL هو تغيير `$table->enum(...)` إلى `$table->string(...)` لأن PostgreSQL Schema Builder لا يدعم `enum`.
-
-
-## 12. جدول users (المستخدمين)
-
-يخزن معلومات المستخدمين المسجلين.
-
-| العمود | النوع | شرح |
-|--------|------|------|
-| id | bigint PK | معرف فريد |
-| name | varchar(255) | اسم المستخدم |
-| email | varchar(255) UNIQUE | البريد الإلكتروني |
-| password | varchar(255) | كلمة المرور (مشفر) |
-| avatar | varchar(255) NULL | صورة المستخدم |
-| tiktok_username | varchar(255) NULL | اسم TikTok |
-| tiktok_open_id | varchar(255) UNIQUE NULL | معرف TikTok |
-| tiktok_access_token | text NULL | توكن TikTok |
-| tiktok_refresh_token | text NULL | توكن التجديد |
-| tiktok_token_expires_at | timestamp NULL | تاريخ انتهاء التوكن |
-| created_at | timestamp | تاريخ الإنشاء |
-| updated_at | timestamp | آخر تحديث |
-
-العلاقات: User hasMany Posts, User hasMany DailyStats.
-
-## 13. جدول posts (المنشورات)
-
-يخزن منشورات TikTok.
-
-| العمود | النوع | شرح |
-|--------|------|------|
-| id | bigint PK | معرف فريد |
-| user_id | bigint FK -> users.id | صاحب المنشور |
-| description | varchar(255) | وصف المنشور |
-| hashtags | varchar(500) NULL | الهاشتاغات |
-| video_url | varchar(255) NULL | رابط الفيديو (Cloudinary) |
-| thumbnail_url | varchar(255) NULL | رابط الصورة المصغرة |
-| views | bigint DEFAULT 0 | المشاهدات |
-| likes | bigint DEFAULT 0 | الإعجابات |
-| comments | bigint DEFAULT 0 | التعليقات |
-| shares | bigint DEFAULT 0 | المشاركات |
-| status | varchar(20) DEFAULT 'draft' | الحالة |
-| created_at | timestamp | تاريخ الإنشاء |
-| updated_at | timestamp | آخر تحديث |
-
-`user_id` هو مفتاح خارجي (Foreign Key) يرتبط بـ users.id. `cascadeOnDelete` يعني إذا حُذف المستخدم، تُحذف منشوراته تلقائيًا.
-
-
-## 14. جدول daily_stats (الإحصائيات اليومية)
-
-يخزن إحصائيات يومية للرسم البياني.
-
-| العمود | النوع | شرح |
-|--------|------|------|
-| id | bigint PK | معرف فريد |
-| user_id | bigint FK | معرف المستخدم |
-| date | date | التاريخ |
-| views | bigint DEFAULT 0 | المشاهدات |
-| likes | bigint DEFAULT 0 | الإعجابات |
-| comments | bigint DEFAULT 0 | التعليقات |
-| shares | bigint DEFAULT 0 | المشاركات |
-| created_at | timestamp | تاريخ الإنشاء |
-| updated_at | timestamp | آخر تحديث |
-
-يوجد `unique(['user_id', 'date'])` لضمان عدم وجود إحصائيتين لنفس المستخدم في نفس اليوم.
-
-## 15. جدول personal_access_tokens (التوكنات)
-
-هذا جدول من Laravel Sanctum لتخزين توكنات المصادقة.
-
-| العمود | النوع | شرح |
-|--------|------|------|
-| id | bigint PK | معرف فريد |
-| tokenable_type | varchar | نوع المستخدم |
-| tokenable_id | bigint | معرف المستخدم |
-| name | varchar | اسم التوكن |
-| token | varchar(64) | التوكن (مشفر) |
-| abilities | text NULL | الصلاحيات |
-| last_used_at | timestamp NULL | آخر استخدام |
-| expires_at | timestamp NULL | تاريخ الانتهاء |
-| created_at | timestamp | تاريخ الإنشاء |
-| updated_at | timestamp | آخر تحديث |
-
-عند تسجيل الدخول، ينشئ Laravel توكنًا جديدًا ويخزنه هنا. عند كل طلب، Sanctum يبحث في هذا الجدول عن التوكن للتحقق من صحته.
-
-## 16. العلاقات بين الجداول
-
-```
-users (1) ---------> (N) posts          (مستخدم يملك منشورات متعددة)
-users (1) ---------> (N) daily_stats    (مستخدم يملك إحصائيات يومية متعددة)
-users (1) ---------> (N) personal_access_tokens  (مستخدم يملك توكنات متعددة)
-users (1) ---------> (N) sessions       (مستخدم يملك جلسات متعددة)
-```
-
-## 17. فهم الـ Migrations
-
-الهجرة (Migration) هي ملف PHP يتحكم في هيكل قاعدة البيانات. بدل إنشاء الجداول يدويًا في PostgreSQL، تكتب الكود مرة واحدة وتشغله.
-
-مميزاتها:
-- التحكم بالنسخ (Version Control)
-- المشاركة بين المطورين
-- التراجع (Rollback)
-- النشر التلقائي
-
-الأمر: `php artisan migrate` يشغل كل الـ Migrations.
-الأمر: `php artisan migrate:rollback` يرجع آخر تغيير.
-
----
-
-# الجزء الرابع: الباك إند (Laravel)
-
-## 18. ما هو Laravel؟
-
-Laravel هو إطار عمل (Framework) لتطوير تطبيقات الويب بلغة PHP.
-
-مميزاته:
-- سهل التعلم، توثيق ممتاز
-- Eloquent ORM للتعامل مع قاعدة البيانات
-- Artisan CLI (php artisan ...)
-- Sanctum للمصادقة
-- Migrations لإدارة قاعدة البيانات
-
-## 19. نمط MVC
-
-Laravel يتبع نمط MVC (Model-View-Controller):
-
-Model <- بيانات (يتواصل مع قاعدة البيانات)
-View <- عرض (في مشروعنا، React هو الـ View)
-Controller <- منطق (يعالج الطلبات)
-
-في StackFlow، الـ View هو React المستقل. Laravel يخدم فقط API JSON.
-
-
-## 20. ملف routes/api.php
-
-يحدد كل مسارات API:
-
-```php
-Route::post('/login', [AuthController::class, 'login']);  // عام
-Route::prefix('auth/tiktok')->group(function () {          // عام
-    Route::get('/redirect', [TikTokAuthController::class, 'redirect']);
-    Route::get('/callback', [TikTokAuthController::class, 'callback']);
-});
-Route::middleware('auth:sanctum')->group(function () {      // محمي
-    Route::post('/logout', ...);
-    Route::get('/user', ...);
-    Route::get('/dashboard/stats', ...);
-    Route::get('/posts', ...);
-    Route::post('/posts', ...);
-    Route::delete('/posts/{post}', ...);
-});
-```
-
-## 21. AuthController
-
-يدير المصادقة:
-- `login()`: يتحقق من الإيميل وكلمة المرور، ينشئ توكن Sanctum، يرجع التوكن + بيانات المستخدم
-- `logout()`: يحذف التوكن الحالي
-- `user()`: يرجع معلومات المستخدم الحالي
-
-## 22. DashboardController
-
-يجلب إحصائيات لوحة التحكم:
-- `stats()`: يحسب مجموع المشاهدات/الإعجابات/التعليقات من جدول posts
-- `dailyStats()`: يجلب الإحصائيات اليومية من جدول daily_stats
-
-## 23. PostController
-
-يدير المنشورات:
-- `index()`: يجلب منشورات المستخدم مرتبة تنازليًا
-- `store()`: ينشئ منشورًا جديدًا مع رفع الفيديو/الصورة إلى Cloudinary
-- `destroy()`: يحذف منشورًا (يتحقق من الملكية أولاً)
-
-## 24. TikTokAuthController
-
-يدير توثيق TikTok عبر OAuth 2.0:
-- `redirect()`: يرجع رابط توثيق TikTok
-- `callback()`: يستقبل الـ code من TikTok، يتبادله مع access_token، يجلب معلومات المستخدم، ينشئ أو يحدث حساب المستخدم
-
-## 25. الموديلات (Models)
-
-### User
-- Traits: HasApiTokens, HasFactory, Notifiable
-- $fillable: الحقول القابلة للتعبئة
-- $hidden: password, tiktok_tokens (لا تظهر في JSON)
-- casts: password -> hashed, tiktok_token_expires_at -> datetime
-- Relations: hasMany(Post), hasMany(DailyStat)
-
-### Post
-- $fillable: description, hashtags, video_url, thumbnail_url, views, likes, comments, shares, status
-- casts: views, likes, comments, shares -> integer
-- Relations: belongsTo(User)
-
-### DailyStat
-- $fillable: date, views, likes, comments, shares
-- Relations: belongsTo(User)
-
-
-## 26. Sanctum للمصادقة
-
-Sanctum هو نظام مصادقة خفيف من Laravel للـ APIs.
-
-نستخدم Token-based authentication:
-- تسجيل دخول -> يحصل على توكن
-- يرسل التوكن في Authorization header: Bearer 1|xxx
-- Sanctum يتحقق من التوكن في كل طلب
-
-## 27. TikTokService
-
-مسؤول عن التواصل مع TikTok API:
-- getAuthUrl(): بناء رابط توثيق TikTok
-- getAccessToken(): تبادل الـ code مع access_token
-- refreshToken(): تجديد التوكن المنتهي
-- getUserInfo(): جلب معلومات المستخدم
-- getVideos(): جلب قائمة الفيديو
-
-## 28. رفع الملفات إلى Cloudinary
-
-قبلًا: التخزين المحلي (يُمسح على Render)
-بعدًا: التخزين على Cloudinary (سحابة، 25GB مجاني)
-
-```php
-// قبل
-$data['video_url'] = $request->file('video')->store('posts/videos', 'public');
-
-// بعد
-$uploadedFile = $request->file('video')->storeOnCloudinary('posts/videos');
-$data['video_url'] = $uploadedFile->getSecurePath();
-```
-
-## 29. CORS
-
-CORS يسمح للفرونت إند (Vercel) بالتواصل مع الباك إند (Render).
-
-في config/cors.php:
-```php
-return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-    'allowed_methods' => ['*'],
-    'allowed_origins' => [env('FRONTEND_URL')],
-    'allowed_headers' => ['*'],
-    'supports_credentials' => true,
-];
-```
-
----
-
-# الجزء الخامس: الفرونت إند (React)
-
-## 30. ما هو React؟
-
-React هي مكتبة JavaScript لبناء واجهات المستخدم.
-
-مبادئ React:
-1. المكونات (Components): تقسيم الواجهة إلى قطع صغيرة
-2. JSX: كتابة HTML داخل JavaScript
-3. الحالة (State): البيانات التي تتغير
-4. Props: بيانات تدخل للمكون من الخارج
-5. Hooks: دوال تضيف ميزات (useState, useEffect)
-
-## 31. main.tsx
-
-نقطة دخول التطبيق. يرسم React داخل العنصر #root في index.html.
-
-```tsx
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-)
-```
-
-## 32. App.tsx
-
-المكون الرئيسي. يحتوي على التوجيه (Routing) الشرطي:
-
-إذا لم يسجل دخول -> يعرض فقط صفحة Login
-إذا سجل دخول -> يعرض Sidebar + Routes (Dashboard, Posts, CreatePost, Settings)
-
-
-## 33. types/index.ts
-
-يعرف أنواع البيانات التي يستخدمها التطبيق: User, Post, Stats, DailyStats.
-
-## 34. services/
-
-طبقة الخدمات للتواصل مع API:
-
-- api.ts: إنشاء Axios instance مع baseURL من VITE_API_URL + interceptor لإضافة التوكن
-- auth.ts: login, logout, getUser, getTikTokAuthUrl
-- dashboard.ts: getStats, getDailyStats
-- posts.ts: getAll, create (FormData), remove
-
-## 35. store/index.ts (Zustand)
-
-4 مخازن (Stores):
-- useAuthStore: user, isAuthenticated, login, logout, fetchUser
-- useDashboardStore: stats, dailyStats, fetchStats
-- usePostsStore: posts, fetchPosts, addPost, deletePost
-- useSettingsStore: language, setLanguage
-
-## 36. hooks/useTranslation.ts
-
-يقرأ اللغة من useSettingsStore ويرجع ملف JSON المناسب (en.json أو fr.json).
-
-## 37. components/
-
-مكونات مشتركة:
-- Sidebar.tsx: الشريط الجانبي مع روابط التنقل
-- StatsCard.tsx: بطاقة إحصائية (title, value, change)
-
-## 38. Tailwind CSS
-
-إطار عمل CSS يستخدم Utility Classes مباشرة في HTML. أمثلة:
-- bg-[#121212]: خلفية داكنة
-- text-white: نص أبيض
-- p-6: padding 24px
-- rounded-xl: border-radius 12px
-- flex, items-center, justify-between: تنسيق مرن
-
----
-
-# الجزء السادس: شرح الصفحات بالتفصيل
-
-## 39. صفحة Login
-
-تسجيل الدخول بالإيميل/كلمة المرور أو بحساب TikTok.
-
-تستخدم:
-- useState لحالة النموذج (email, password, error)
-- Zod للتحقق من صحة البيانات
-- useAuthStore للدخول
-- useNavigate للتوجيه بعد الدخول
-
-## 40. صفحة Dashboard
-
-لوحة التحكم مع إحصائيات ورسم بياني.
-
-تستخدم:
-- useEffect لجلب البيانات عند التحميل
-- StatsCard لعرض الإحصائيات
-- Recharts (LineChart) للرسم البياني
-- useDashboardStore للبيانات
-
-## 41. صفحة Posts
-
-قائمة المنشورات مع إمكانية الحذف.
-
-تستخدم:
-- useEffect لجلب المنشورات
-- usePostsStore للبيانات
-- Link للانتقال إلى صفحة الإنشاء
-
-## 42. صفحة CreatePost
-
-إنشاء منشور جديد مع رفع فيديو/صورة.
-
-تستخدم:
-- FormData لإرسال الملفات
-- useState لحالة النموذج
-- usePostsStore.addPost()
-- useNavigate للتوجيه بعد الإنشاء
-
-## 43. صفحة Settings
-
-الإعدادات الشخصية وتغيير اللغة.
-
-تستخدم:
-- useAuthStore للمستخدم الحالي
-- useSettingsStore للغة
-- localStorage لحفظ اللغة
-
-
-## 44. تدفق البيانات الكامل
-
-مثال: مستخدم جديد -> تسجيل دخول -> مشاهدة المنشورات
-
-1. المتصفح يحمّل التطبيق
-2. App.tsx: isAuthenticated=false -> Login
-3. المستخدم يكتب البيانات ويضغط Submit
-4. apiAuth.login() -> POST /api/login
-5. Laravel يتحقق -> يرجع توكن + بيانات المستخدم
-6. localStorage يحفظ التوكن
-7. useAuthStore: isAuthenticated=true
-8. App.tsx: يعرض التطبيق الكامل
-9. المستخدم يضغط Posts
-10. useEffect -> fetchPosts() -> GET /api/posts
-11. Laravel يجلب المنشورات من PostgreSQL
-12. يعرضها في القائمة
-
----
-
-# الجزء السابع: النشر والتشغيل
-
-## 45. تحضير الكود للنشر
-
-التغييرات المطبقة:
-- .gitignore: تجاهل node_modules, dist, .env, vendor
-- composer.json: إضافة cloudinary-labs/cloudinary-laravel
-- config/cors.php: جديد (السماح للفرونت إند)
-- config/cloudinary.php: جديد (إعدادات Cloudinary)
-- PostController: تغيير التخزين إلى Cloudinary
-- PostResource: إزالة Storage::url()
-- Migration: تغيير enum -> string لـ PostgreSQL
-- Session migration: جديد
-
-## 46. نشر الفرونت إند على Vercel
-
-1. ادخل Vercel.com -> New Project -> اختر GitHub repo
-2. Framework: Vite, Root: /, Build: npm install && npm run build, Output: dist
-3. Environment Variable: VITE_API_URL=https://api.onrender.com/api
-4. Deploy
-
-## 47. نشر الباك إند على Render
-
-1. ادخل Render.com -> New Web Service -> اختر GitHub repo
-2. Root Directory: backend
-3. Build: composer install --no-dev --optimize-autoloader
-4. Start: php artisan serve --host=0.0.0.0 --port=$PORT
-5. Plan: Free
-6. أضف Environment Variables من .env.example
-7. Deploy
-8. Shell: php artisan migrate
-
-## 48. PostgreSQL على Render
-
-1. New -> PostgreSQL -> Plan: Free
-2. انسخ Internal Database URL
-3. أضف القيم كـ Environment Variables في Web Service
-4. تأكد من DB_CONNECTION=pgsql
-
-## 49. Cloudinary
-
-1. cloudinary.com -> Sign up free (25GB)
-2. انسخ Cloud Name, API Key, API Secret
-3. أضفهم كـ Environment Variables في Render
-
-## 50. TikTok Sandbox
-
-1. TikTok Developer Portal -> Your App -> Sandbox
-2. Redirect URIs: https://api.onrender.com/api/auth/tiktok/callback
-3. Domains: https://frontend.vercel.app
-
----
-
-تم إعداد هذا الكتاب بواسطة AI لتوثيق مشروع StackFlow (TikTok Manager) بالكامل.
-التاريخ: 13 يوليو 2026
-
----
-
+composer install                  # تحميل كل مكتبات PHP
+copy .env.example .env            # إنشاء ملف الإعدادات من النموذج
+php artisan key:generate          # توليد مفتاح التشفير APP_KEY
+php artisan serve                 # تشغيل الخادم على http://localhost:8000
+
+# 3. تشغيل قاعدة البيانات
+php artisan migrate               # إنشاء الجداول في قاعدة البيانات
+`
+
+### دورة العمل اليومية (Development Workflow)
+
+1. تشغل 
+pm run dev للفرونت إند (في نافذة Terminal منفصلة)
+2. تشغل php artisan serve للباك إند (في نافذة أخرى)
+3. تفتح http://localhost:5173 في المتصفح
+4. تعدل أي كود ← التغييرات تظهر فوراً بفضل HMR (Hot Module Replacement)
+5. تختبر الوظائف
+6. ترفع التغييرات لـ GitHub بـ git add . && git commit -m "..." && git push
+
+ملاحظة: HMR يعني أن React يعيد تحميل الجزء الذي تغير فقط بدون إعادة تحميل الصفحة كاملة.
+
+─── نهاية الجزء الأول ───
