@@ -43,4 +43,17 @@ THIS FILE CONTAINS ALL CHANGES MADE BY AI STEP BY STEP
           - index.html (0.40 kB)
           - assets/index-DJdpJZaK.js (651 kB, gzipped 198 kB)
           - assets/index-BCSr-Se4.css (40 kB)
+          
+[STEP 10b] Git commit + push to GitHub:
+           - Removed dist/ from tracking (Vercel rebuilds it)
+           - Added all new files + modifications
+           - Commit: "Prepare for deployment: PostgreSQL, Cloudinary, CORS, session table, .gitignore"
+           - Pushed to origin/main
+
+[STEP 11] Created comprehensive Arabic book (STACKFLOW_BOOK_AR.md):
+          - 810 lines, 31,541 bytes
+          - 50 sections across 7 parts
+          - Covers: fundamentals, project overview, PostgreSQL database, Laravel backend, React frontend, page details, deployment
+          - Converted to PDF (485 KB) using scripts/book-to-pdf.js
+          - PDF file: STACKFLOW_BOOK_AR.pdf (ready to print/share)
 
