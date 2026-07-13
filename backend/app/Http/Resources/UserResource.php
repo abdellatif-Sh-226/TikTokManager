@@ -15,6 +15,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'avatar' => $this->avatar,
             'tiktokUsername' => $this->tiktok_username,
+            'hasTikTok' => !is_null($this->tiktok_open_id),
         ];
     }
 }

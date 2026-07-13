@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'email', 'password', 'avatar', 'tiktok_username'])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'tiktok_access_token', 'tiktok_refresh_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -22,6 +22,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'tiktok_token_expires_at' => 'datetime',
         ];
     }
 

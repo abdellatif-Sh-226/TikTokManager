@@ -1,28 +1,45 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { usePostsStore } from '../store'
 import { useTranslation } from '../hooks/useTranslation'
 
 function Posts() {
   const t = useTranslation()
-  const { posts, isLoading, fetchPosts, addPost, deletePost } = usePostsStore()
-  const [description, setDescription] = useState('')
-  const [showForm, setShowForm] = useState(false)
+  const navigate = useNavigate()
+  const { posts, isLoading, error, fetchPosts, deletePost } = usePostsStore()
 
   useEffect(() => {
     fetchPosts()
   }, [fetchPosts])
 
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!description.trim()) return
-    await addPost({ description: description.trim() })
-    setDescription('')
-    setShowForm(false)
-  }
-
   if (isLoading && posts.length === 0) {
     return (
       <div className="text-center text-[#888888] py-20">Loading...</div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-white">{t.posts.title}</h1>
+          <button
+            onClick={() => navigate('/posts/new')}
+            className="px-4 py-2 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors"
+          >
+            {t.posts.add}
+          </button>
+        </div>
+        <div className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-6 text-center">
+          <p className="text-[#ff1744] text-sm mb-3">{error}</p>
+          <button
+            onClick={fetchPosts}
+            className="px-4 py-2 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -31,36 +48,23 @@ function Posts() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-white">{t.posts.title}</h1>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => navigate('/posts/new')}
           className="px-4 py-2 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors"
         >
           {t.posts.add}
         </button>
       </div>
 
-      {showForm && (
-        <form
-          onSubmit={handleAdd}
-          className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-4 mb-6 flex gap-3"
-        >
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="flex-1 px-3 py-2 bg-[#121212] border border-[#2e2e2e] rounded-lg text-white text-sm focus:outline-none focus:border-[#fe2c55]"
-            placeholder={t.posts.description}
-          />
+      {posts.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-[#888888] mb-4">{t.posts.noPosts}</p>
           <button
-            type="submit"
-            className="px-4 py-2 bg-[#25f4ee] text-black rounded-lg text-sm font-medium hover:bg-[#1fd8d2] transition-colors"
+            onClick={() => navigate('/posts/new')}
+            className="px-4 py-2 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors"
           >
             {t.posts.add}
           </button>
-        </form>
-      )}
-
-      {posts.length === 0 ? (
-        <p className="text-[#888888] text-center py-10">{t.posts.noPosts}</p>
+        </div>
       ) : (
         <div className="space-y-3">
           {posts.map((post) => (
@@ -69,25 +73,35 @@ function Posts() {
               className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-5 flex items-center justify-between"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-medium truncate">
-                  {post.description}
-                </p>
-                <div className="flex gap-4 mt-2 text-xs text-[#888888]">
-                  <span>
-                    {t.posts.views}: {post.views.toLocaleString()}
-                  </span>
-                  <span>
-                    {t.posts.likes}: {post.likes.toLocaleString()}
-                  </span>
-                  <span>
-                    {t.posts.comments}: {post.comments.toLocaleString()}
-                  </span>
-                  <span>{t.posts.status}: {post.status}</span>
+                <div className="flex items-start gap-4">
+                  {post.thumbnailUrl && (
+                    <img
+                      src={post.thumbnailUrl}
+                      alt=""
+                      className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-white text-sm font-medium truncate">
+                      {post.description}
+                    </p>
+                    {post.hashtags && (
+                      <p className="text-[#25f4ee] text-xs mt-1 truncate">
+                        {post.hashtags}
+                      </p>
+                    )}
+                    <div className="flex gap-4 mt-2 text-xs text-[#888888]">
+                      <span>{t.posts.views}: {post.views.toLocaleString()}</span>
+                      <span>{t.posts.likes}: {post.likes.toLocaleString()}</span>
+                      <span>{t.posts.comments}: {post.comments.toLocaleString()}</span>
+                      <span>{t.posts.status}: {post.status}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <button
                 onClick={() => deletePost(post.id)}
-                className="ml-4 px-3 py-1.5 text-xs text-[#ff1744] border border-[#ff1744] rounded-lg hover:bg-[#ff1744] hover:text-white transition-colors"
+                className="ml-4 px-3 py-1.5 text-xs text-[#ff1744] border border-[#ff1744] rounded-lg hover:bg-[#ff1744] hover:text-white transition-colors flex-shrink-0"
               >
                 {t.posts.delete}
               </button>

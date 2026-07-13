@@ -1,10 +1,5 @@
 import api from './api'
-import type { User } from '../types'
-
-interface LoginResponse {
-  user: User
-  token: string
-}
+import type { User, LoginResponse } from '../types'
 
 export const authService = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
@@ -21,5 +16,10 @@ export const authService = {
   getUser: async (): Promise<User> => {
     const { data } = await api.get<{ user: User }>('/user')
     return data.user
+  },
+
+  getTikTokAuthUrl: async (): Promise<string> => {
+    const { data } = await api.get<{ url: string }>('/auth/tiktok/redirect')
+    return data.url
   },
 }

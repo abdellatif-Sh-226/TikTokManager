@@ -4,6 +4,7 @@ import { useAuthStore } from './store'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
 import Posts from './pages/Posts'
+import CreatePost from './pages/CreatePost'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 import './App.css'
@@ -39,6 +40,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/posts" element={<Posts />} />
+          <Route path="/posts/new" element={<CreatePost />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

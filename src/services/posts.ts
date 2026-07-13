@@ -7,8 +7,14 @@ export const postsService = {
     return data.data
   },
 
-  create: async (postData: Partial<Post>): Promise<Post> => {
-    const { data } = await api.post<{ data: Post }>('/posts', postData)
+  create: async (formData: FormData): Promise<Post> => {
+    const token = localStorage.getItem('tiktok_token')
+    const { data } = await api.post<{ data: Post }>('/posts', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    })
     return data.data
   },
 

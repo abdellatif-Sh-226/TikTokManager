@@ -4,11 +4,13 @@ export interface User {
   name: string
   avatar?: string
   tiktokUsername?: string
+  hasTikTok?: boolean
 }
 
 export interface Post {
   id: string
   description: string
+  hashtags?: string
   videoUrl?: string
   thumbnailUrl?: string
   views: number
@@ -36,4 +38,9 @@ export interface DailyStats {
   likes: number
   comments: number
   shares: number
+}
+
+export interface LoginResponse {
+  user: User
+  token: string
 }

@@ -10,6 +10,7 @@ export interface AuthStore {
   isLoading: boolean
   initialized: boolean
   login: (email: string, password: string) => Promise<void>
+  loginWithTikTok: () => Promise<void>
   logout: () => Promise<void>
   init: () => Promise<void>
 }
@@ -24,8 +25,9 @@ export interface DashboardStore {
 export interface PostsStore {
   posts: Post[]
   isLoading: boolean
+  error: string | null
   fetchPosts: () => Promise<void>
-  addPost: (data: Partial<Post>) => Promise<void>
+  addPost: (formData: FormData) => Promise<Post>
   deletePost: (id: string) => Promise<void>
 }
 
@@ -49,11 +51,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
       throw new Error('Invalid credentials')
     }
   },
+  loginWithTikTok: async () => {
+    const url = await authService.getTikTokAuthUrl()
+    window.location.href = url
+  },
   logout: async () => {
     try {
       await authService.logout()
     } catch {
-      // ignore logout errors
+      // ignore
     }
     set({ user: null, isAuthenticated: false })
   },
@@ -94,18 +100,20 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
 export const usePostsStore = create<PostsStore>((set, get) => ({
   posts: [],
   isLoading: false,
+  error: null,
   fetchPosts: async () => {
-    set({ isLoading: true })
+    set({ isLoading: true, error: null })
     try {
       const posts = await postsService.getAll()
       set({ posts, isLoading: false })
     } catch {
-      set({ isLoading: false })
+      set({ isLoading: false, error: 'Failed to load posts. Make sure the backend server is running.' })
     }
   },
-  addPost: async (data) => {
-    const post = await postsService.create(data)
+  addPost: async (formData) => {
+    const post = await postsService.create(formData)
     set({ posts: [post, ...get().posts] })
+    return post
   },
   deletePost: async (id) => {
     await postsService.remove(id)
