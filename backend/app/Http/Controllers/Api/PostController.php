@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Services\CloudinaryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function __construct(
+        private readonly CloudinaryService $cloudinary
+    ) {}
+
     public function index(Request $request): JsonResponse
     {
         $posts = $request->user()
@@ -28,13 +33,11 @@ class PostController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('video')) {
-            $uploadedFile = $request->file('video')->storeOnCloudinary('posts/videos');
-            $data['video_url'] = $uploadedFile->getSecurePath();
+            $data['video_url'] = $this->cloudinary->upload($request->file('video'), 'posts/videos');
         }
 
         if ($request->hasFile('thumbnail')) {
-            $uploadedFile = $request->file('thumbnail')->storeOnCloudinary('posts/thumbnails');
-            $data['thumbnail_url'] = $uploadedFile->getSecurePath();
+            $data['thumbnail_url'] = $this->cloudinary->upload($request->file('thumbnail'), 'posts/thumbnails');
         }
 
         $post = $request->user()->posts()->create($data);

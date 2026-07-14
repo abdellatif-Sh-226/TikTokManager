@@ -72,5 +72,30 @@ THIS FILE CONTAINS ALL CHANGES MADE BY AI STEP BY STEP
             ├── .gitignore
             ├── ai_changes
             └── documentation files
-          - Frontend build tested successfully from front/
+           - Frontend build tested successfully from front/
 
+[STEP 13] Fixed Dockerfile for Render deployment:
+           - Removed php artisan config/route/view:cache from build (env vars not available during Docker build)
+           - Created start.sh script that runs caching + migrations at container startup
+           - Patched Apache to use Render's PORT env var (${PORT:-80}) instead of hardcoded port 80
+           - Added ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+           - Changed CMD from apache2-foreground to /start.sh
+           - Files changed: backend/Dockerfile, backend/start.sh (new)
+
+[STEP 14] Fixed frontend-backend connectivity:
+           - Added CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET to backend/.env
+             (PostController depends on CloudinaryService → was crashing with 500 on /api/posts)
+           - Created front/.env with VITE_API_URL=http://localhost:8000/api
+             (frontend had no .env file → fallback default was used but explicitly setting it ensures reliability)
+           - Restarted both backend & frontend dev servers
+
+[STEP 15] Created backend/.env.production for Render deployment:
+           - APP_ENV=production, APP_DEBUG=false
+           - DB_CONNECTION=pgsql with DB_SSLMODE=require
+           - DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD left empty (user fills in)
+           - CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET left empty
+           - TIKTOK_CLIENT_ID, TIKTOK_CLIENT_SECRET left empty
+           - TIKTOK_REDIRECT_URI updated to Render URL
+           - SESSION_DRIVER=database
+           - LOG_LEVEL=error
+ 
