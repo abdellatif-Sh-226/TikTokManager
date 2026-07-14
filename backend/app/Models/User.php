@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'avatar', 'tiktok_username'])]
+#[Fillable(['name', 'email', 'password', 'avatar', 'tiktok_username', 'tiktok_open_id', 'tiktok_access_token', 'tiktok_refresh_token', 'tiktok_token_expires_at'])]
 #[Hidden(['password', 'remember_token', 'tiktok_access_token', 'tiktok_refresh_token'])]
 class User extends Authenticatable
 {

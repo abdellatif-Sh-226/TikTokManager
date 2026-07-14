@@ -89,7 +89,26 @@ THIS FILE CONTAINS ALL CHANGES MADE BY AI STEP BY STEP
              (frontend had no .env file → fallback default was used but explicitly setting it ensures reliability)
            - Restarted both backend & frontend dev servers
 
-[STEP 15] Created backend/.env.production for Render deployment:
+[STEP 15] Terms & Privacy pages already existed in backend (web.php + views):
+           - /terms → resources/views/pages/terms.blade.php
+           - /privacy → resources/views/pages/privacy.blade.php
+           - Served via ngrok HTTPS for TikTok approval
+
+[STEP 16] Updated TikTok scopes in TikTokService.php to match TikTok Portal:
+           - Added video.publish, user.info.profile, user.info.stats
+           - Full scope: user.info.basic,video.publish,video.upload,user.info.profile,user.info.stats,video.list
+
+[STEP 17] Fixed CORS issue: FRONTEND_URL changed from localhost:5173 to 5174
+           (Vite dev server fell back to port 5174 because 5173 was in use)
+
+[STEP 19] Fixed TikTok OAuth flow (final fixes):
+           - User.php: Added tiktok_open_id, tiktok_access_token, tiktok_refresh_token, tiktok_token_expires_at to #[Fillable]
+             (was missing → mass assignment set them to null → updateOrCreate couldn't find user → INSERT failed on email UNIQUE)
+           - TikTokService.php: Changed base URL from open-api.tiktok.com → open.tiktokapis.com (TikTok v2 API)
+           - TikTokService.php: Changed access_token from query param to Authorization: Bearer header (new API requirement)
+           - TikTokService.php: Fixed getVideos() same header fix
+
+[STEP 20] Created backend/.env.production for Render deployment:
            - APP_ENV=production, APP_DEBUG=false
            - DB_CONNECTION=pgsql with DB_SSLMODE=require
            - DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD left empty (user fills in)

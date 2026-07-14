@@ -13,6 +13,13 @@ function App() {
   const { isAuthenticated, initialized, init } = useAuthStore()
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('token')
+    if (token) {
+      localStorage.setItem('tiktok_token', token)
+      window.location.href = '/'
+      return
+    }
     init()
   }, [init])
 

@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\TikTokService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class TikTokAuthController extends Controller
@@ -22,7 +23,7 @@ class TikTokAuthController extends Controller
         return response()->json(['url' => $url]);
     }
 
-    public function callback(Request $request): JsonResponse
+    public function callback(Request $request): JsonResponse|RedirectResponse
     {
         $code = $request->query('code');
 
@@ -33,10 +34,10 @@ class TikTokAuthController extends Controller
         try {
             $tokenData = $this->tiktok->getAccessToken($code);
 
-            $accessToken = $tokenData['data']['access_token'];
-            $openId = $tokenData['data']['open_id'];
-            $refreshToken = $tokenData['data']['refresh_token'];
-            $expiresIn = $tokenData['data']['expires_in'];
+            $accessToken = $tokenData['access_token'];
+            $openId = $tokenData['open_id'];
+            $refreshToken = $tokenData['refresh_token'];
+            $expiresIn = $tokenData['expires_in'];
 
             $userInfo = $this->tiktok->getUserInfo($accessToken, $openId);
             $tikTokUser = $userInfo['data']['user'];
@@ -57,10 +58,9 @@ class TikTokAuthController extends Controller
 
             $token = $user->createToken('api-token')->plainTextToken;
 
-            return response()->json([
-                'user' => new UserResource($user),
-                'token' => $token,
-            ]);
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:5174');
+
+            return redirect()->away($frontendUrl . '/?token=' . $token);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'TikTok authentication failed',

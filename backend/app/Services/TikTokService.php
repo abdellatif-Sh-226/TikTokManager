@@ -20,13 +20,12 @@ class TikTokService
         $this->redirectUri = config('services.tiktok.redirect_uri');
         $this->sandbox = config('services.tiktok.sandbox', true);
 
-        $baseUri = $this->sandbox
-            ? 'https://open-api.tiktok.com/'
-            : 'https://open-api.tiktok.com/';
+        $baseUri = 'https://open.tiktokapis.com/';
 
         $this->client = new Client([
             'base_uri' => $baseUri,
             'timeout' => 10,
+            'verify' => false,
         ]);
     }
 
@@ -34,13 +33,13 @@ class TikTokService
     {
         $params = http_build_query([
             'client_key' => $this->clientId,
-            'scope' => 'user.info.basic,video.list,video.upload',
+            'scope' => 'user.info.basic,video.publish,video.upload,user.info.profile,user.info.stats,video.list',
             'redirect_uri' => $this->redirectUri,
             'response_type' => 'code',
             'state' => csrf_token(),
         ]);
 
-        return "https://www.tiktok.com/v2/auth/authorize?{$params}";
+        return "https://www.tiktok.com/v2/auth/authorize/?{$params}";
     }
 
     /**
@@ -84,8 +83,10 @@ class TikTokService
     public function getUserInfo(string $accessToken, string $openId): array
     {
         $response = $this->client->get('v2/user/info/', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
             'query' => [
-                'access_token' => $accessToken,
                 'fields' => 'open_id,union_id,avatar_url,display_name,username',
             ],
         ]);
@@ -99,8 +100,10 @@ class TikTokService
     public function getVideos(string $accessToken, string $openId, int $cursor = 0, int $maxCount = 20): array
     {
         $response = $this->client->get('v2/video/list/', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
             'query' => [
-                'access_token' => $accessToken,
                 'open_id' => $openId,
                 'cursor' => $cursor,
                 'max_count' => $maxCount,
