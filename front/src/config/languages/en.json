@@ -22,7 +22,10 @@
     "views": "Views",
     "likes": "Likes",
     "comments": "Comments",
-    "dailyViews": "Daily Views"
+    "shares": "Shares",
+    "dailyViews": "Views Over Time",
+    "noTikTok": "Connect your TikTok account to see real stats",
+    "connectTikTok": "Connect TikTok"
   },
   "posts": {
     "title": "Posts",

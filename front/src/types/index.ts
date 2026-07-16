@@ -30,6 +30,11 @@ export interface Stats {
   likesChange: number
   comments: number
   commentsChange: number
+  shares: number
+  sharesChange: number
+  avatar: string | null
+  displayName: string | null
+  username: string | null
 }
 
 export interface DailyStats {

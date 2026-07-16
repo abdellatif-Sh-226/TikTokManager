@@ -11,14 +11,14 @@ class PostResource extends JsonResource
     {
         return [
             'id' => (string) $this->id,
-            'description' => $this->description,
-            'hashtags' => $this->hashtags,
-            'videoUrl' => $this->video_url,
-            'thumbnailUrl' => $this->thumbnail_url,
-            'views' => (int) $this->views,
-            'likes' => (int) $this->likes,
-            'comments' => (int) $this->comments,
-            'shares' => (int) $this->shares,
+            'description' => $this->description ?: '—',
+            'hashtags' => $this->hashtags ?: '',
+            'videoUrl' => $this->video_url ?: null,
+            'thumbnailUrl' => $this->thumbnail_url ?: null,
+            'views' => (int) ($this->views ?: 0),
+            'likes' => (int) ($this->likes ?: 0),
+            'comments' => (int) ($this->comments ?: 0),
+            'shares' => (int) ($this->shares ?: 0),
             'createdAt' => $this->created_at->toIso8601String(),
             'status' => $this->status ?? 'draft',
         ];

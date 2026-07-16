@@ -87,7 +87,7 @@ class TikTokService
                 'Authorization' => 'Bearer ' . $accessToken,
             ],
             'query' => [
-                'fields' => 'open_id,union_id,avatar_url,display_name,username',
+                'fields' => 'open_id,union_id,avatar_url,display_name,username,follower_count,following_count,likes_count,video_count',
             ],
         ]);
 
@@ -99,15 +99,33 @@ class TikTokService
      */
     public function getVideos(string $accessToken, string $openId, int $cursor = 0, int $maxCount = 20): array
     {
-        $response = $this->client->get('v2/video/list/', [
+        $response = $this->client->post('v2/video/list/?' . http_build_query([
+            'fields' => 'id,title,cover_image_url,view_count,like_count,comment_count,share_count,create_time',
+        ]), [
             'headers' => [
                 'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
             ],
-            'query' => [
-                'open_id' => $openId,
-                'cursor' => $cursor,
+            'json' => [
                 'max_count' => $maxCount,
-                'fields' => 'id,title,cover_image_url,view_count,like_count,comment_count,share_count,create_time',
+                'cursor' => $cursor,
+            ],
+        ]);
+
+        return json_decode($response->getBody(), true);
+    }
+
+    public function getVideoById(string $accessToken, array $videoIds): array
+    {
+        $response = $this->client->post('v2/video/query/?' . http_build_query([
+            'fields' => 'id,title,cover_image_url,view_count,like_count,comment_count,share_count,create_time,share_url',
+        ]), [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'filters' => ['video_ids' => $videoIds],
             ],
         ]);
 

@@ -22,7 +22,10 @@
     "views": "Vues",
     "likes": "J'aime",
     "comments": "Commentaires",
-    "dailyViews": "Vues quotidiennes"
+    "shares": "Partages",
+    "dailyViews": "Évolution des vues",
+    "noTikTok": "Connecte ton compte TikTok pour voir les stats réelles",
+    "connectTikTok": "Connecter TikTok"
   },
   "posts": {
     "title": "Publications",
