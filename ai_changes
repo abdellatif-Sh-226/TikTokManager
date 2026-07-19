@@ -115,6 +115,126 @@ THIS FILE CONTAINS ALL CHANGES MADE BY AI STEP BY STEP
            - CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET left empty
            - TIKTOK_CLIENT_ID, TIKTOK_CLIENT_SECRET left empty
            - TIKTOK_REDIRECT_URI updated to Render URL
-           - SESSION_DRIVER=database
-           - LOG_LEVEL=error
- 
+            - SESSION_DRIVER=database
+            - LOG_LEVEL=error
+
+[STEP 21] Fixed CORS blocking POST to /api/posts (2026-07-19):
+           ROOT CAUSE: Custom CorsMiddleware was prepended alongside Laravel 13's built-in HandleCors,
+           causing a dual-middleware conflict. Additionally, the server was never restarted after changes.
+           The built-in HandleCors (backed by fruitcake/php-cors) was already in the default global
+           middleware stack — the custom one was redundant and conflicting.
+           
+           Changes made:
+           - Removed \App\Http\Middleware\CorsMiddleware::class prepend from bootstrap/app.php
+           - Deleted app/Http/Middleware/CorsMiddleware.php (no longer needed)
+           - Cleared all Laravel caches (config, cache, route)
+           - Killed and restarted php artisan serve on port 8000
+           - Verified CORS headers present on both OPTIONS preflight and POST responses
+           
+           The built-in HandleCors reads config/cors.php automatically:
+           - paths: ['api/*'] matches all API routes
+           - allowed_origins: [env('FRONTEND_URL', 'http://localhost:5173')]
+           - supports_credentials: true
+
+[STEP 22] Added comprehensive logging throughout (2026-07-19):
+           Backend (Log::info/error/warning with [ServiceName] prefix):
+           - TikTokService.php, CloudinaryService.php, PostController.php
+           - TikTokAuthController.php, AuthController.php, DashboardController.php
+           Frontend (console.log/error/warn with [ServiceName] prefix):
+           - api.ts, auth.ts, posts.ts, dashboard.ts
+           - store/index.ts, App.tsx, Login.tsx, CreatePost.tsx, Posts.tsx, Dashboard.tsx
+
+[STEP 23] Fixed multiple code issues (2026-07-19):
+           - PostController store(): Changed sleep(3) to retry loop (5 attempts, 3s delay)
+           - PostController index/store: Added token expiry checking + auto-refresh
+           - TikTokAuthController: Error cases now redirect with ?error= param
+           - StorePostRequest: Added MUTUAL_FOLLOW_FRIENDS to privacy_level validation
+           - Posts page: Added delete confirmation dialog, spinner animation
+           - CloudinaryService: Added try/catch error handling
+            - Login page: Added error display from OAuth redirect
+            - TikTokService: Timeout increased from 10 to 30 seconds
+
+[STEP 24] CORS fix - Vite Dev Proxy (2026-07-19):
+           ROOT CAUSE: Despite CorsMiddleware being configured, CORS still blocked because
+           the browser sees different origins (localhost:5173 vs localhost:8000).
+
+           Solution: Vite Dev Server Proxy + Custom CorsMiddleware together.
+           - front/vite.config.ts: Added server.proxy config
+             '/api' requests proxy to 'http://localhost:8000'
+           - front/.env: Changed VITE_API_URL from 'http://localhost:8000/api' to '/api'
+             (relative path so Vite proxy handles it)
+           - Recreated app/Http/Middleware/CorsMiddleware.php with handle() + terminate()
+           - bootstrap/app.php: Registered CorsMiddleware via $middleware->replace()
+           - config/cors.php: allowed_origins = [env('FRONTEND_URL', 'http://localhost:5173')]
+           - Verified: Both OPTIONS preflight and POST requests work without CORS errors
+
+[STEP 25] Fixed file upload issues (2026-07-19):
+           - PHP upload_max_filesize was 2MB default, videos needed 50MB
+           - php.ini at: C:\Users\wess\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.3_...\php.ini
+           - Added: upload_max_filesize = 50M, post_max_size = 55M
+           - Added: upload_tmp_dir = "C:\Users\wess\AppData\Local\Temp"
+           - Note: php artisan serve spawns child processes that don't always read the custom php.ini
+
+[STEP 26] Fixed queryCreatorInfo error (2026-07-19):
+           - TikTok endpoint /v2/post/publish/creator_info/query/ was returning 400 error
+           - ROOT CAUSE: Sending 'json' => [] (empty JSON body) + Content-Type: application/json header
+           - Fix: Removed the 'json' => [] body parameter and Content-Type header from the request
+           - The endpoint doesn't expect a request body, only Authorization header
+
+[STEP 27] Switched from PULL_FROM_URL to FILE_UPLOAD (2026-07-19):
+           - PULL_FROM_URL returned "url_ownership_unverified" error
+           - TikTok sandbox requires verified domain to pull from URL
+           - Solution: Switch to FILE_UPLOAD (PUSH_TO_SERVER) which works in sandbox
+
+           Changes to TikTokService.php:
+           - initPublish(): Removed $videoUrl parameter, added $videoSize parameter
+           - Changed source from 'PULL_FROM_URL' to 'FILE_UPLOAD'
+           - Added: video_size, chunk_size, total_chunk_count to source_info
+           - Added: $chunkSize = min($chunkSize, $videoSize) to handle small files
+           - Added new uploadVideo() method for chunked PUT upload:
+             - Reads file in chunks using fopen/fread
+             - Sends each chunk with Content-Range header: "bytes start-end/total"
+             - Uses PUT method to TikTok's upload_url
+
+[STEP 28] Updated PostController for FILE_UPLOAD flow (2026-07-19):
+           - PostController::store() rewritten to use new FILE_UPLOAD flow
+           - Gets video size from $request->file('video')->getSize()
+           - Gets video temp path from $request->file('video')->getRealPath()
+           - Calls queryCreatorInfo (no body, just auth header)
+           - Calls initPublish with FILE_UPLOAD params (title, privacy, disableComment, videoSize)
+           - Gets publish_id + upload_url from response
+           - Calls uploadVideo($uploadUrl, $videoPath, $videoSize) to upload directly to TikTok
+           - Polls getPublishStatus 5 times with 3s delay between checks
+           - Saves tiktok_publish_id and tiktok_status to the post
+
+[STEP 29] Fixed Maximum execution time exceeded (2026-07-19):
+           - Cloudinary upload alone took >30 seconds for 2MB video
+           - php artisan serve ignores max_execution_time from php.ini for web requests
+           - Added: set_time_limit(300) at the start of PostController::store()
+           - Also added max_execution_time = 300 and default_socket_timeout = 300 to php.ini
+           - Increased Guzzle HTTP timeout from 30s to 120s in TikTokService
+
+[STEP 30] Fixed chunk_size invalid error (2026-07-19):
+           - TikTok returned "The chunk size is invalid" error
+           - ROOT CAUSE: Video was 2MB but chunk_size was 10MB (default)
+           - TikTok rejects when chunk_size > video_size
+           - Fix: Added $chunkSize = min($chunkSize, $videoSize) in initPublish()
+           - For 2MB video: chunk_size = 2040177, total_chunk_count = 1
+
+[STEP 31] Fixed unaudited_client_can_only_post_to_private_accounts (2026-07-19):
+           - TikTok sandbox apps can only publish to private accounts
+           - Solution: User made their TikTok test account private
+           - Path: TikTok App -> Profile -> Settings -> Privacy -> Private Account = ON
+           - After this fix, video publishing worked successfully!
+
+[STEP 32] Generated comprehensive Arabic PDF book (2026-07-19):
+           - Created generate_book.py using fpdf2 + arabic-reshaper + python-bidi
+           - PDF: C:\Users\wess\Desktop\Ur_backend.pdf
+           - 33 pages, all in Arabic (RTL)
+           - Covers 15 chapters: project overview, architecture, setup, database,
+             authentication, TikTok OAuth, Content Posting API, Cloudinary,
+             CORS, ngrok, API endpoints, frontend, debugging, error table,
+             conclusion and next steps
+           - Includes all source code with Arabic explanations
+           - Includes error/solution table for common issues
+

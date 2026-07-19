@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { User, Post, Stats, DailyStats } from '../types'
+import type { User, Post, Stats, DailyStats, TikTokPublishStatus } from '../types'
 import { authService } from '../services/auth'
 import { dashboardService } from '../services/dashboard'
 import { postsService } from '../services/posts'
@@ -27,7 +27,7 @@ export interface PostsStore {
   isLoading: boolean
   error: string | null
   fetchPosts: () => Promise<void>
-  addPost: (formData: FormData) => Promise<Post>
+  addPost: (formData: FormData) => Promise<Post & { tiktokStatus?: TikTokPublishStatus }>
   deletePost: (id: string) => Promise<void>
 }
 
@@ -42,37 +42,54 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoading: false,
   initialized: false,
   login: async (email, password) => {
+    console.log('[AuthStore] login called', { email })
     set({ isLoading: true })
     try {
       const { user } = await authService.login(email, password)
+      console.log('[AuthStore] login success', { user })
       set({ user, isAuthenticated: true, isLoading: false })
-    } catch {
+    } catch (error) {
+      console.error('[AuthStore] login failed', { error })
       set({ isLoading: false })
       throw new Error('Invalid credentials')
     }
   },
   loginWithTikTok: async () => {
-    const url = await authService.getTikTokAuthUrl()
-    window.location.href = url
+    console.log('[AuthStore] loginWithTikTok called')
+    try {
+      const url = await authService.getTikTokAuthUrl()
+      console.log('[AuthStore] Redirecting to TikTok auth:', url)
+      window.location.href = url
+    } catch (error) {
+      console.error('[AuthStore] loginWithTikTok failed', { error })
+    }
   },
   logout: async () => {
+    console.log('[AuthStore] logout called')
     try {
       await authService.logout()
     } catch {
       // ignore
     }
     set({ user: null, isAuthenticated: false })
+    console.log('[AuthStore] logout complete')
   },
   init: async () => {
     const token = localStorage.getItem('tiktok_token')
+    console.log('[AuthStore] init called', { hasToken: !!token, tokenPrefix: token ? token.substring(0, 15) + '...' : null })
+
     if (!token) {
+      console.log('[AuthStore] No token found, marking as initialized (not authenticated)')
       set({ initialized: true })
       return
     }
     try {
+      console.log('[AuthStore] Validating token with /user endpoint')
       const user = await authService.getUser()
+      console.log('[AuthStore] Token valid, user authenticated', { user })
       set({ user, isAuthenticated: true, initialized: true })
-    } catch {
+    } catch (error) {
+      console.error('[AuthStore] Token invalid, removing', { error })
       localStorage.removeItem('tiktok_token')
       set({ initialized: true })
     }
@@ -84,14 +101,17 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   dailyStats: [],
   isLoading: false,
   fetchStats: async () => {
+    console.log('[DashboardStore] fetchStats called')
     set({ isLoading: true })
     try {
       const [stats, dailyStats] = await Promise.all([
         dashboardService.getStats(),
         dashboardService.getDailyStats(),
       ])
+      console.log('[DashboardStore] fetchStats success', { stats, dailyStatsCount: dailyStats?.length })
       set({ stats, dailyStats, isLoading: false })
-    } catch {
+    } catch (error) {
+      console.error('[DashboardStore] fetchStats failed', { error })
       set({ isLoading: false })
     }
   },
@@ -102,28 +122,48 @@ export const usePostsStore = create<PostsStore>((set, get) => ({
   isLoading: false,
   error: null,
   fetchPosts: async () => {
+    console.log('[PostsStore] fetchPosts called')
     set({ isLoading: true, error: null })
     try {
       const posts = await postsService.getAll()
+      console.log('[PostsStore] fetchPosts success', { count: posts?.length })
       set({ posts, isLoading: false })
-    } catch {
+    } catch (error: any) {
+      console.error('[PostsStore] fetchPosts failed', { error })
       set({ isLoading: false, error: 'Failed to load posts. Make sure the backend server is running.' })
     }
   },
   addPost: async (formData) => {
-    const post = await postsService.create(formData)
-    set({ posts: [post, ...get().posts] })
-    return post
+    console.log('[PostsStore] addPost called')
+    try {
+      const post = await postsService.create(formData)
+      console.log('[PostsStore] addPost success', { post, tiktokStatus: post?.tiktokStatus })
+      if (post && post.id) {
+        set({ posts: [post, ...get().posts.filter(p => p && p.id)] })
+      }
+      return post
+    } catch (error) {
+      console.error('[PostsStore] addPost failed', { error })
+      throw error
+    }
   },
   deletePost: async (id) => {
-    await postsService.remove(id)
-    set({ posts: get().posts.filter(p => p.id !== id) })
+    console.log('[PostsStore] deletePost called', { id })
+    try {
+      await postsService.remove(id)
+      set({ posts: get().posts.filter(p => p.id !== id) })
+      console.log('[PostsStore] deletePost success', { id })
+    } catch (error) {
+      console.error('[PostsStore] deletePost failed', { id, error })
+      throw error
+    }
   },
 }))
 
 export const useSettingsStore = create<SettingsStore>((set) => ({
   language: (localStorage.getItem('lang') as 'en' | 'fr') || 'en',
   setLanguage: (lang) => {
+    console.log('[SettingsStore] setLanguage called', { lang })
     localStorage.setItem('lang', lang)
     set({ language: lang })
   },

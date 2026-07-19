@@ -9,6 +9,7 @@ class Post extends Model
     protected $fillable = [
         'user_id', 'description', 'hashtags', 'video_url', 'thumbnail_url',
         'views', 'likes', 'comments', 'shares', 'status',
+        'tiktok_publish_id', 'tiktok_status',
     ];
 
     protected function casts(): array

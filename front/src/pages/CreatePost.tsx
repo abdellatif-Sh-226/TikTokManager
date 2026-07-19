@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { usePostsStore } from '../store'
 import { useTranslation } from '../hooks/useTranslation'
 
+const privacyOptions = [
+  { value: 'PUBLIC_TO_EVERYONE', label: 'Public', icon: '🌍' },
+  { value: 'SELF_ONLY', label: 'Private (only me)', icon: '🔒' },
+]
+
 function CreatePost() {
   const t = useTranslation()
   const navigate = useNavigate()
@@ -10,12 +15,15 @@ function CreatePost() {
 
   const [description, setDescription] = useState('')
   const [hashtags, setHashtags] = useState('')
-  const [status, setStatus] = useState<'draft' | 'published' | 'scheduled'>('draft')
   const [video, setVideo] = useState<File | null>(null)
   const [thumbnail, setThumbnail] = useState<File | null>(null)
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null)
+  const [privacyLevel, setPrivacyLevel] = useState('SELF_ONLY')
+  const [disableComment, setDisableComment] = useState(false)
+  const [publishToTikTok, setPublishToTikTok] = useState(true)
   const [error, setError] = useState('')
+  const [submitStatus, setSubmitStatus] = useState<string | null>(null)
 
   const videoRef = useRef<HTMLInputElement>(null)
   const thumbnailRef = useRef<HTMLInputElement>(null)
@@ -23,6 +31,12 @@ function CreatePost() {
   const handleVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    console.log('[CreatePost] Video selected', {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      lastModified: file.lastModified,
+    })
     setVideo(file)
     setVideoPreview(URL.createObjectURL(file))
   }
@@ -30,40 +44,99 @@ function CreatePost() {
   const handleThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    console.log('[CreatePost] Thumbnail selected', {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    })
     setThumbnail(file)
     setThumbnailPreview(URL.createObjectURL(file))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('[CreatePost] handleSubmit called')
     setError('')
+    setSubmitStatus(null)
 
+    // Validation
     if (!description.trim()) {
+      console.log('[CreatePost] Validation failed: no description')
       setError('Description is required')
       return
     }
+    if (!video) {
+      console.log('[CreatePost] Validation failed: no video')
+      setError('Please select a video to upload')
+      return
+    }
+
+    console.log('[CreatePost] Building FormData', {
+      description: description.trim(),
+      hashtags: hashtags.trim(),
+      videoName: video.name,
+      videoSize: video.size,
+      videoType: video.type,
+      thumbnailName: thumbnail?.name,
+      privacyLevel,
+      disableComment,
+      publishToTikTok,
+    })
+
+    setSubmitStatus('Uploading to Cloudinary...')
 
     const formData = new FormData()
     formData.append('description', description.trim())
-    formData.append('status', status)
+    if (hashtags.trim()) formData.append('hashtags', hashtags.trim())
+    formData.append('video', video)
+    if (thumbnail) formData.append('thumbnail', thumbnail)
+    formData.append('privacy_level', privacyLevel)
+    formData.append('disable_comment', disableComment ? '1' : '0')
+    formData.append('publish_to_tiktok', publishToTikTok ? '1' : '0')
 
-    if (hashtags.trim()) {
-      formData.append('hashtags', hashtags.trim())
-    }
-
-    if (video) {
-      formData.append('video', video)
-    }
-
-    if (thumbnail) {
-      formData.append('thumbnail', thumbnail)
-    }
+    // Log FormData contents
+    formData.forEach((value, key) => {
+      if (value instanceof File) {
+        console.log(`[CreatePost] FormData[${key}]: File(${value.name}, ${value.size} bytes, ${value.type})`)
+      } else {
+        console.log(`[CreatePost] FormData[${key}]: ${value}`)
+      }
+    })
 
     try {
-      await addPost(formData)
-      navigate('/posts')
-    } catch {
+      setSubmitStatus('Publishing to TikTok...')
+      console.log('[CreatePost] Calling addPost...')
+      const result = await addPost(formData)
+      console.log('[CreatePost] addPost returned', { result, tiktokStatus: result?.tiktokStatus })
+
+      if (result?.tiktokStatus) {
+        if (result.tiktokStatus.status === 'PUBLISH_COMPLETE') {
+          setSubmitStatus('✅ Published to TikTok!')
+          console.log('[CreatePost] TikTok publish complete')
+        } else if (result.tiktokStatus.error) {
+          setSubmitStatus(`⚠️ Saved locally, TikTok: ${result.tiktokStatus.message}`)
+          console.warn('[CreatePost] TikTok publish error', { status: result.tiktokStatus })
+        } else {
+          setSubmitStatus(`✅ Uploaded. TikTok status: ${result.tiktokStatus.status}`)
+          console.log('[CreatePost] TikTok status:', result.tiktokStatus.status)
+        }
+      } else {
+        setSubmitStatus('✅ Saved locally')
+        console.log('[CreatePost] No TikTok status, saved locally')
+      }
+      setTimeout(() => {
+        console.log('[CreatePost] Redirecting to /posts')
+        navigate('/posts')
+      }, 1500)
+    } catch (err: any) {
+      console.error('[CreatePost] handleSubmit failed', {
+        error: err,
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      })
       setError('Failed to create post')
+      setSubmitStatus(null)
     }
   }
 
@@ -96,13 +169,7 @@ function CreatePost() {
                 <p className="text-xs text-[#555] mt-1">MP4, MOV, AVI (max 50MB)</p>
               </>
             )}
-            <input
-              ref={videoRef}
-              type="file"
-              accept="video/mp4,video/quicktime,video/x-msvideo"
-              onChange={handleVideo}
-              className="hidden"
-            />
+            <input ref={videoRef} type="file" accept="video/mp4,video/quicktime,video/x-msvideo" onChange={handleVideo} className="hidden" />
           </div>
 
           <div
@@ -120,13 +187,7 @@ function CreatePost() {
                 <p className="text-xs text-[#555] mt-1">JPG, PNG (max 5MB)</p>
               </>
             )}
-            <input
-              ref={thumbnailRef}
-              type="file"
-              accept="image/jpeg,image/png"
-              onChange={handleThumbnail}
-              className="hidden"
-            />
+            <input ref={thumbnailRef} type="file" accept="image/jpeg,image/png" onChange={handleThumbnail} className="hidden" />
           </div>
         </div>
 
@@ -135,7 +196,7 @@ function CreatePost() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={4}
+            rows={3}
             className="w-full px-3 py-2 bg-[#121212] border border-[#2e2e2e] rounded-lg text-white text-sm focus:outline-none focus:border-[#fe2c55] resize-none"
             placeholder="Write your video description..."
           />
@@ -150,24 +211,65 @@ function CreatePost() {
             className="w-full px-3 py-2 bg-[#121212] border border-[#2e2e2e] rounded-lg text-white text-sm focus:outline-none focus:border-[#fe2c55]"
             placeholder="#dance #viral #fyp"
           />
-          <p className="text-xs text-[#555] mt-1">Separate hashtags with spaces</p>
         </div>
 
+        {/* Privacy Level */}
         <div>
-          <label className="block text-sm text-[#888888] mb-1">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as typeof status)}
-            className="w-full px-3 py-2 bg-[#121212] border border-[#2e2e2e] rounded-lg text-white text-sm focus:outline-none focus:border-[#fe2c55]"
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="scheduled">Scheduled</option>
-          </select>
+          <label className="block text-sm text-[#888888] mb-2">Privacy</label>
+          <div className="flex gap-3">
+            {privacyOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setPrivacyLevel(opt.value)}
+                className={`flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-colors border ${
+                  privacyLevel === opt.value
+                    ? 'bg-[#25f4ee]/10 border-[#25f4ee] text-[#25f4ee]'
+                    : 'bg-[#121212] border-[#2e2e2e] text-[#888888] hover:text-white'
+                }`}
+              >
+                <span className="mr-2">{opt.icon}</span>
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {error && (
-          <p className="text-sm text-[#ff1744]">{error}</p>
+        {/* Options */}
+        <div className="flex gap-6">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={publishToTikTok}
+              onChange={(e) => {
+                console.log('[CreatePost] publishToTikTok toggled:', e.target.checked)
+                setPublishToTikTok(e.target.checked)
+              }}
+              className="w-4 h-4 rounded accent-[#fe2c55]"
+            />
+            <span className="text-sm text-white">Post to TikTok</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={disableComment}
+              onChange={(e) => {
+                console.log('[CreatePost] disableComment toggled:', e.target.checked)
+                setDisableComment(e.target.checked)
+              }}
+              className="w-4 h-4 rounded accent-[#fe2c55]"
+            />
+            <span className="text-sm text-[#888888]">Disable comments</span>
+          </label>
+        </div>
+
+        {error && <p className="text-sm text-[#ff1744] bg-[#ff1744]/10 border border-[#ff1744]/30 rounded-lg px-4 py-2">{error}</p>}
+
+        {submitStatus && (
+          <div className="text-sm text-[#25f4ee] bg-[#25f4ee]/10 border border-[#25f4ee]/30 rounded-lg px-4 py-2 flex items-center gap-2">
+            <span className="animate-pulse">●</span>
+            {submitStatus}
+          </div>
         )}
 
         <div className="flex gap-3 justify-end">
@@ -180,10 +282,22 @@ function CreatePost() {
           </button>
           <button
             type="submit"
-            disabled={isLoading}
-            className="px-6 py-2.5 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors disabled:opacity-50"
+            disabled={isLoading || !!submitStatus}
+            className="px-6 py-2.5 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors disabled:opacity-50 flex items-center gap-2"
           >
-            {isLoading ? 'Creating...' : 'Create Post'}
+            {isLoading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/>
+                </svg>
+                Post to TikTok
+              </>
+            )}
           </button>
         </div>
       </form>

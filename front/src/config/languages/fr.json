@@ -36,7 +36,17 @@
     "views": "Vues",
     "likes": "J'aime",
     "comments": "Commentaires",
-    "noPosts": "Aucune publication"
+    "noPosts": "Aucune publication",
+    "publishToTikTok": "Publier sur TikTok",
+    "privacy": "Confidentialité",
+    "public": "Public",
+    "private": "Privé (moi seulement)",
+    "disableComments": "Désactiver les commentaires",
+    "uploading": "Téléchargement vers Cloudinary...",
+    "publishing": "Publication sur TikTok...",
+    "published": "Publié sur TikTok !",
+    "savedLocally": "Enregistré localement",
+    "selectVideo": "Veuillez sélectionner une vidéo"
   },
   "settings": {
     "title": "Paramètres",

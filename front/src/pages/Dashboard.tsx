@@ -20,8 +20,11 @@ function Dashboard() {
   const { loginWithTikTok } = useAuthStore()
 
   useEffect(() => {
+    console.log('[Dashboard] Component mounted, fetching stats...')
     fetchStats()
   }, [fetchStats])
+
+  console.log('[Dashboard] Rendering', { isLoading, hasStats: !!stats, dailyStatsCount: dailyStats?.length })
 
   if (isLoading || !stats) {
     return (
@@ -35,6 +38,7 @@ function Dashboard() {
   }
 
   const hasTikTok = stats.avatar || stats.followers > 0 || stats.views > 0 || stats.likes > 0
+  console.log('[Dashboard] hasTikTok:', hasTikTok, { stats })
 
   return (
     <div>
@@ -64,7 +68,10 @@ function Dashboard() {
         </div>
         {!hasTikTok && (
           <button
-            onClick={loginWithTikTok}
+            onClick={() => {
+              console.log('[Dashboard] Connect TikTok button clicked')
+              loginWithTikTok()
+            }}
             className="px-4 py-2 bg-[#25f4ee] text-black rounded-lg text-sm font-bold hover:opacity-90 transition-opacity"
           >
             {t.dashboard.connectTikTok}

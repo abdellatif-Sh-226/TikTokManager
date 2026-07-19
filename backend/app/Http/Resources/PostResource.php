@@ -21,6 +21,8 @@ class PostResource extends JsonResource
             'shares' => (int) ($this->shares ?: 0),
             'createdAt' => $this->created_at->toIso8601String(),
             'status' => $this->status ?? 'draft',
+            'tiktokPublishId' => $this->tiktok_publish_id,
+            'tiktokStatus' => $this->tiktok_status,
         ];
     }
 }

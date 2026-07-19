@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 import { useAuthStore } from '../store'
 import { useTranslation } from '../hooks/useTranslation'
@@ -12,25 +12,39 @@ const loginSchema = z.object({
 function Login() {
   const t = useTranslation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { login, loginWithTikTok, isLoading } = useAuthStore()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  // Check for error from OAuth redirect
+  const oauthError = searchParams.get('error')
+  if (oauthError && !error) {
+    console.log('[Login] OAuth error from redirect:', oauthError)
+    setError(decodeURIComponent(oauthError))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('[Login] handleSubmit called', { email })
     setError('')
 
     const result = loginSchema.safeParse({ email, password })
     if (!result.success) {
-      setError(result.error.issues[0].message)
+      const errorMsg = result.error.issues[0].message
+      console.log('[Login] Validation failed', { errorMsg })
+      setError(errorMsg)
       return
     }
 
     try {
+      console.log('[Login] Calling login...')
       await login(email, password)
+      console.log('[Login] Login successful, navigating to /')
       navigate('/')
-    } catch {
+    } catch (err) {
+      console.error('[Login] Login failed', { err })
       setError(t.login.error)
     }
   }
@@ -43,7 +57,10 @@ function Login() {
         </h1>
 
         <button
-          onClick={loginWithTikTok}
+          onClick={() => {
+            console.log('[Login] TikTok button clicked')
+            loginWithTikTok()
+          }}
           className="w-full py-2.5 bg-[#25f4ee] text-black rounded-lg text-sm font-bold mb-6 hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

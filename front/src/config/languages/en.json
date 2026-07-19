@@ -36,7 +36,17 @@
     "views": "Views",
     "likes": "Likes",
     "comments": "Comments",
-    "noPosts": "No posts yet"
+    "noPosts": "No posts yet",
+    "publishToTikTok": "Post to TikTok",
+    "privacy": "Privacy",
+    "public": "Public",
+    "private": "Private (only me)",
+    "disableComments": "Disable comments",
+    "uploading": "Uploading to Cloudinary...",
+    "publishing": "Publishing to TikTok...",
+    "published": "Published to TikTok!",
+    "savedLocally": "Saved locally",
+    "selectVideo": "Please select a video to upload"
   },
   "settings": {
     "title": "Settings",

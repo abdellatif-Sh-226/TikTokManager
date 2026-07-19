@@ -19,6 +19,15 @@ export interface Post {
   shares: number
   createdAt: string
   status: 'published' | 'draft' | 'scheduled'
+  tiktokPublishId?: string
+  tiktokStatus?: TikTokPublishStatus | null
+}
+
+export interface TikTokPublishStatus {
+  publish_id?: string
+  status?: string
+  error?: string
+  message?: string
 }
 
 export interface Stats {

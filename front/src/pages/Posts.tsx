@@ -9,12 +9,18 @@ function Posts() {
   const { posts, isLoading, error, fetchPosts, deletePost } = usePostsStore()
 
   useEffect(() => {
+    console.log('[Posts] Component mounted, fetching posts...')
     fetchPosts()
   }, [fetchPosts])
 
+  console.log('[Posts] Rendering', { postsCount: posts.length, isLoading, error })
+
   if (isLoading && posts.length === 0) {
     return (
-      <div className="text-center text-[#888888] py-20">Loading...</div>
+      <div className="text-center text-[#888888] py-20">
+        <div className="animate-spin w-8 h-8 border-2 border-[#fe2c55] border-t-transparent rounded-full mx-auto mb-4" />
+        Loading posts...
+      </div>
     )
   }
 
@@ -33,7 +39,10 @@ function Posts() {
         <div className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-6 text-center">
           <p className="text-[#ff1744] text-sm mb-3">{error}</p>
           <button
-            onClick={fetchPosts}
+            onClick={() => {
+              console.log('[Posts] Retry button clicked')
+              fetchPosts()
+            }}
             className="px-4 py-2 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors"
           >
             Retry
@@ -67,7 +76,7 @@ function Posts() {
         </div>
       ) : (
         <div className="space-y-3">
-          {posts.map((post) => (
+          {posts.filter(Boolean).map((post) => (
             <div
               key={post.id}
               className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-5 flex items-center justify-between"
@@ -100,7 +109,12 @@ function Posts() {
                 </div>
               </div>
               <button
-                onClick={() => deletePost(post.id)}
+                onClick={() => {
+                  console.log('[Posts] Delete button clicked for post:', post.id)
+                  if (confirm('Are you sure you want to delete this post?')) {
+                    deletePost(post.id)
+                  }
+                }}
                 className="ml-4 px-3 py-1.5 text-xs text-[#ff1744] border border-[#ff1744] rounded-lg hover:bg-[#ff1744] hover:text-white transition-colors flex-shrink-0"
               >
                 {t.posts.delete}
