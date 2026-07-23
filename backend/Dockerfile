@@ -6,7 +6,7 @@ RUN a2enmod rewrite
 
 RUN apt-get update && apt-get install -y libpq-dev libzip-dev libicu-dev libonig-dev libxml2-dev unzip pkg-config && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_pgsql pgsql mbstring xml ctype fileinfo tokenizer bcmath zip intl opcache
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring xml bcmath zip intl opcache
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
