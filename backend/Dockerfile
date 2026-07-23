@@ -4,9 +4,9 @@ WORKDIR /var/www/html
 
 RUN a2enmod rewrite
 
-RUN apt-get update && apt-get install -y libpq-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libpq-dev libzip-dev libicu-dev unzip && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_pgsql pgsql
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring xml ctype fileinfo tokenizer bcmath zip intl opcache
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
