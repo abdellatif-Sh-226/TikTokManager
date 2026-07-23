@@ -144,14 +144,13 @@ class TikTokAuthController extends Controller
             ]);
 
             $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
-            $redirectUrl = $frontendUrl . '/?token=' . $token;
 
             Log::info('[TikTokAuthController] Redirecting to frontend', [
                 'frontend_url' => $frontendUrl,
-                'redirect_url' => $redirectUrl,
             ]);
 
-            return redirect()->away($redirectUrl);
+            return redirect()->away($frontendUrl)
+                ->cookie('auth_token', $token, 120, '/', null, false, false);
         } catch (\Exception $e) {
             Log::error('[TikTokAuthController] TikTok authentication FAILED', [
                 'error' => $e->getMessage(),
