@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\TikTokAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::prefix('auth/tiktok')->group(function () {
     Route::get('/redirect', [TikTokAuthController::class, 'redirect']);

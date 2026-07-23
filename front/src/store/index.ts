@@ -10,6 +10,7 @@ export interface AuthStore {
   isLoading: boolean
   initialized: boolean
   login: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string) => Promise<void>
   loginWithTikTok: () => Promise<void>
   logout: () => Promise<void>
   init: () => Promise<void>
@@ -52,6 +53,19 @@ export const useAuthStore = create<AuthStore>((set) => ({
       console.error('[AuthStore] login failed', { error })
       set({ isLoading: false })
       throw new Error('Invalid credentials')
+    }
+  },
+  register: async (name, email, password) => {
+    console.log('[AuthStore] register called', { name, email })
+    set({ isLoading: true })
+    try {
+      const { user } = await authService.register(name, email, password)
+      console.log('[AuthStore] register success', { user })
+      set({ user, isAuthenticated: true, isLoading: false })
+    } catch (error) {
+      console.error('[AuthStore] register failed', { error })
+      set({ isLoading: false })
+      throw error
     }
   },
   loginWithTikTok: async () => {

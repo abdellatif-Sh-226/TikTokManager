@@ -9,16 +9,23 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 })
 
+const registerSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
 function Login() {
   const t = useTranslation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { login, loginWithTikTok, isLoading } = useAuthStore()
+  const { login, register, loginWithTikTok, isLoading } = useAuthStore()
+  const [mode, setMode] = useState<'login' | 'register'>('login')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  // Check for error from OAuth redirect
   const oauthError = searchParams.get('error')
   if (oauthError && !error) {
     console.log('[Login] OAuth error from redirect:', oauthError)
@@ -27,25 +34,33 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('[Login] handleSubmit called', { email })
+    console.log('[Login] handleSubmit called', { mode, email })
     setError('')
 
-    const result = loginSchema.safeParse({ email, password })
-    if (!result.success) {
-      const errorMsg = result.error.issues[0].message
-      console.log('[Login] Validation failed', { errorMsg })
-      setError(errorMsg)
-      return
-    }
-
-    try {
-      console.log('[Login] Calling login...')
-      await login(email, password)
-      console.log('[Login] Login successful, navigating to /')
-      navigate('/')
-    } catch (err) {
-      console.error('[Login] Login failed', { err })
-      setError(t.login.error)
+    if (mode === 'register') {
+      const result = registerSchema.safeParse({ name, email, password })
+      if (!result.success) {
+        setError(result.error.issues[0].message)
+        return
+      }
+      try {
+        await register(name, email, password)
+        navigate('/')
+      } catch (err: any) {
+        setError(err?.response?.data?.message || 'Registration failed')
+      }
+    } else {
+      const result = loginSchema.safeParse({ email, password })
+      if (!result.success) {
+        setError(result.error.issues[0].message)
+        return
+      }
+      try {
+        await login(email, password)
+        navigate('/')
+      } catch (err) {
+        setError(t.login.error)
+      }
     }
   }
 
@@ -53,12 +68,11 @@ function Login() {
     <div className="min-h-screen bg-[#121212] flex items-center justify-center">
       <div className="bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl p-8 w-full max-w-sm">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          {t.login.title}
+          {mode === 'login' ? t.login.title : 'Create Account'}
         </h1>
 
         <button
           onClick={() => {
-            console.log('[Login] TikTok button clicked')
             loginWithTikTok()
           }}
           className="w-full py-2.5 bg-[#25f4ee] text-black rounded-lg text-sm font-bold mb-6 hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
@@ -75,7 +89,35 @@ function Login() {
           <div className="flex-1 h-px bg-[#2e2e2e]" />
         </div>
 
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => { setMode('login'); setError('') }}
+            className={`flex-1 py-2 text-sm rounded-lg font-medium transition-colors ${mode === 'login' ? 'bg-[#fe2c55] text-white' : 'bg-[#2e2e2e] text-[#888]'}`}
+          >
+            {t.login.submit}
+          </button>
+          <button
+            onClick={() => { setMode('register'); setError('') }}
+            className={`flex-1 py-2 text-sm rounded-lg font-medium transition-colors ${mode === 'register' ? 'bg-[#fe2c55] text-white' : 'bg-[#2e2e2e] text-[#888]'}`}
+          >
+            Register
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === 'register' && (
+            <div>
+              <label className="block text-sm text-[#888888] mb-1">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 bg-[#121212] border border-[#2e2e2e] rounded-lg text-white text-sm focus:outline-none focus:border-[#fe2c55]"
+                placeholder="Your name"
+              />
+            </div>
+          )}
+
           <div>
             <label className="block text-sm text-[#888888] mb-1">
               {t.login.email}
@@ -111,7 +153,7 @@ function Login() {
             disabled={isLoading}
             className="w-full py-2.5 bg-[#fe2c55] text-white rounded-lg text-sm font-medium hover:bg-[#e01e45] transition-colors disabled:opacity-50"
           >
-            {isLoading ? '...' : t.login.submit}
+            {isLoading ? '...' : mode === 'login' ? t.login.submit : 'Register'}
           </button>
         </form>
       </div>

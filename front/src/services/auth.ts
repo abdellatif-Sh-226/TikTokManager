@@ -39,6 +39,19 @@ export const authService = {
     }
   },
 
+  register: async (name: string, email: string, password: string): Promise<LoginResponse> => {
+    console.log('[AuthService] register called', { name, email })
+    try {
+      const { data } = await api.post<LoginResponse>('/register', { name, email, password })
+      console.log('[AuthService] register success', { user: data.user, hasToken: !!data.token })
+      localStorage.setItem('tiktok_token', data.token)
+      return data
+    } catch (error: any) {
+      console.error('[AuthService] register failed', { error: error.response?.data || error.message })
+      throw error
+    }
+  },
+
   getTikTokAuthUrl: async (): Promise<string> => {
     console.log('[AuthService] getTikTokAuthUrl called')
     try {
