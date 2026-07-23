@@ -9,3 +9,10 @@ backend/storage/app/
 backend/bootstrap/cache/
 *.log
 .DS_Store
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
