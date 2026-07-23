@@ -4,6 +4,8 @@ WORKDIR /var/www/html
 
 RUN a2enmod rewrite
 
+RUN apt-get update && apt-get install -y libpq-dev && rm -rf /var/lib/apt/lists/*
+
 RUN docker-php-ext-install pdo_pgsql pgsql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
