@@ -54,7 +54,4 @@ export interface DailyStats {
   shares: number
 }
 
-export interface LoginResponse {
-  user: User
-  token: string
-}
+

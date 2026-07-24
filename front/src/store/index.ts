@@ -9,10 +9,8 @@ export interface AuthStore {
   isAuthenticated: boolean
   isLoading: boolean
   initialized: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (name: string, email: string, password: string) => Promise<void>
   loginWithTikTok: () => Promise<void>
-  logout: () => Promise<void>
+  logout: () => void
   init: () => Promise<void>
 }
 
@@ -42,32 +40,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isAuthenticated: false,
   isLoading: false,
   initialized: false,
-  login: async (email, password) => {
-    console.log('[AuthStore] login called', { email })
-    set({ isLoading: true })
-    try {
-      const { user } = await authService.login(email, password)
-      console.log('[AuthStore] login success', { user })
-      set({ user, isAuthenticated: true, isLoading: false })
-    } catch (error) {
-      console.error('[AuthStore] login failed', { error })
-      set({ isLoading: false })
-      throw new Error('Invalid credentials')
-    }
-  },
-  register: async (name, email, password) => {
-    console.log('[AuthStore] register called', { name, email })
-    set({ isLoading: true })
-    try {
-      const { user } = await authService.register(name, email, password)
-      console.log('[AuthStore] register success', { user })
-      set({ user, isAuthenticated: true, isLoading: false })
-    } catch (error) {
-      console.error('[AuthStore] register failed', { error })
-      set({ isLoading: false })
-      throw error
-    }
-  },
   loginWithTikTok: async () => {
     console.log('[AuthStore] loginWithTikTok called')
     try {
@@ -78,13 +50,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
       console.error('[AuthStore] loginWithTikTok failed', { error })
     }
   },
-  logout: async () => {
+  logout: () => {
     console.log('[AuthStore] logout called')
-    try {
-      await authService.logout()
-    } catch {
-      // ignore
-    }
+    localStorage.removeItem('tiktok_token')
     set({ user: null, isAuthenticated: false })
     console.log('[AuthStore] logout complete')
   },
