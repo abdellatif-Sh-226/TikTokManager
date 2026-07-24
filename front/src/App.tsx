@@ -9,22 +9,15 @@ import Settings from './pages/Settings'
 import Login from './pages/Login'
 import './App.css'
 
-function getCookie(name: string): string | null {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
-  return match ? decodeURIComponent(match[2]) : null
-}
-
-function deleteCookie(name: string) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-}
-
 function App() {
   const { isAuthenticated, initialized, init } = useAuthStore()
 
   useEffect(() => {
     console.log('[App] Checking for auth token...')
 
-    const error = new URLSearchParams(window.location.search).get('error')
+    const urlParams = new URLSearchParams(window.location.search)
+
+    const error = urlParams.get('error')
     if (error) {
       console.error('[App] Login error from redirect:', error)
       window.history.replaceState({}, '', '/login?error=' + encodeURIComponent(error))
@@ -32,17 +25,16 @@ function App() {
       return
     }
 
-    const token = getCookie('auth_token')
-    if (token) {
-      console.log('[App] Token found in cookie, saving to localStorage')
-      localStorage.setItem('tiktok_token', token)
-      deleteCookie('auth_token')
+    const urlToken = urlParams.get('token')
+    if (urlToken) {
+      console.log('[App] Token found in URL, saving to localStorage')
+      localStorage.setItem('tiktok_token', urlToken)
       window.history.replaceState({}, '', '/')
       init()
       return
     }
 
-    console.log('[App] No token in cookie, calling init()')
+    console.log('[App] No token found, calling init()')
     init()
   }, [init])
 

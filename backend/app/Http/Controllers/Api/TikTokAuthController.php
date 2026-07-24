@@ -149,8 +149,7 @@ class TikTokAuthController extends Controller
                 'frontend_url' => $frontendUrl,
             ]);
 
-            return redirect()->away($frontendUrl)
-                ->cookie('auth_token', $token, 120, '/', null, false, false);
+            return redirect()->away($frontendUrl . '?token=' . $token);
         } catch (\Exception $e) {
             Log::error('[TikTokAuthController] TikTok authentication FAILED', [
                 'error' => $e->getMessage(),
