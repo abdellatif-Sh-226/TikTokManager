@@ -12,7 +12,13 @@ class AuthController extends Controller
 {
     public function user(Request $request): JsonResponse
     {
-        $user = $request->user()->load('posts');
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $user->load('posts');
 
         Log::info('[AuthController] user called', [
             'user_id' => $user->id,

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Manager — @yield('title')</title>
+    <title>StackFlow Manager — @yield('title')</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -73,7 +73,7 @@
 </head>
 <body>
     <header>
-        <h1>TikTok Manager</h1>
+        <h1>StackFlow Manager</h1>
     </header>
     <main>
         <h2>@yield('title')</h2>
@@ -81,7 +81,7 @@
         @yield('content')
     </main>
     <footer>
-        &copy; {{ date('Y') }} TikTok Manager. All rights reserved.
+        &copy; {{ date('Y') }} StackFlow Manager. All rights reserved.
     </footer>
 </body>
 </html>

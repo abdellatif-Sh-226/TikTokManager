@@ -5,7 +5,7 @@
 <section>
     <h3>1. Acceptance of Terms</h3>
     <p>
-        By accessing or using TikTok Manager (&quot;the Application&quot;), you agree to be bound by these Terms of Service.
+        By accessing or using StackFlow Manager (&quot;the Application&quot;), you agree to be bound by these Terms of Service.
         If you do not agree with any part of these terms, you must not use the Application.
     </p>
 </section>
@@ -13,7 +13,7 @@
 <section>
     <h3>2. Description of Service</h3>
     <p>
-        TikTok Manager provides users with analytics, content management, and scheduling tools for their TikTok accounts.
+        StackFlow Manager provides users with analytics, content management, and scheduling tools for their TikTok accounts.
         The Application interacts with TikTok's official API to retrieve and manage data on behalf of authorized users.
     </p>
 </section>
@@ -39,7 +39,7 @@
 <section>
     <h3>5. Intellectual Property</h3>
     <p>
-        The Application and its original content, features, and functionality are owned by TikTok Manager
+        The Application and its original content, features, and functionality are owned by StackFlow Manager
         and are protected by applicable copyright, trademark, and other intellectual property laws.
     </p>
 </section>
@@ -47,7 +47,7 @@
 <section>
     <h3>6. Limitation of Liability</h3>
     <p>
-        TikTok Manager shall not be liable for any indirect, incidental, special, consequential,
+        StackFlow Manager shall not be liable for any indirect, incidental, special, consequential,
         or punitive damages arising out of or related to your use of the Application.
         The Application is provided on an &quot;as is&quot; and &quot;as available&quot; basis without warranties of any kind.
     </p>
@@ -73,7 +73,7 @@
     <h3>9. Contact</h3>
     <p>
         If you have any questions about these Terms, please contact us at
-        <a href="mailto:support@tiktok-manager.app">support@tiktok-manager.app</a>.
+        <a href="mailto:support@stackflow.app">support@stackflow.app</a>.
     </p>
 </section>
 @endsection

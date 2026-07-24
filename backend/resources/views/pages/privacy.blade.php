@@ -5,7 +5,7 @@
 <section>
     <h3>1. Information We Collect</h3>
     <p>
-        When you connect your TikTok account to TikTok Manager, we may collect the following information:
+        When you connect your TikTok account to StackFlow Manager, we may collect the following information:
     </p>
     <ul>
         <li>Your TikTok profile information (username, display name, avatar).</li>
@@ -80,7 +80,7 @@
     <h3>9. Contact Us</h3>
     <p>
         If you have any questions or concerns about our Privacy Policy, please contact us at
-        <a href="mailto:support@tiktok-manager.app">support@tiktok-manager.app</a>.
+        <a href="mailto:support@stackflow.app">support@stackflow.app</a>.
     </p>
 </section>
 @endsection
